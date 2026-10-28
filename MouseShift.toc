@@ -6,6 +6,7 @@
 ## X-Website: https://www.mikebronka.com
 ## X-License: MIT
 ## X-Curse-Project-ID: 1770978
+## X-Wago-ID: nGv9rqKx
 ## IconTexture: Interface\AddOns\MouseShift\Media\icon
 ## SavedVariables: MouseShiftDB
 ## AddonCompartmentFunc: MouseShift_OnAddonCompartmentClick
