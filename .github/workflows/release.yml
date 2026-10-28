@@ -1,0 +1,31 @@
+name: Release
+
+# Pushing a version tag (for example v1.0.0) builds the addon zip and
+# publishes it. GitHub Releases always gets the zip. CurseForge, Wago and
+# WoWInterface are uploaded to only when their tokens are set as repository
+# secrets and their project IDs are present in MouseShift.toc.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
+      WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
+      GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Package and publish
+        uses: BigWigsMods/packager@v2

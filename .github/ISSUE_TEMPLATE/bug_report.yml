@@ -1,0 +1,54 @@
+name: Bug report
+description: Something does not work as expected.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a problem. The details below help reproduce it quickly.
+
+  - type: dropdown
+    id: game
+    attributes:
+      label: Game version
+      options:
+        - Retail
+        - WoW Forever
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: MouseShift version and client interface
+      description: Type /mouseshift in game and paste the last line here.
+      placeholder: "MouseShift 1.0.0, client interface 120100"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you press, what did you expect, and what happened instead? Did it happen in combat?
+    validations:
+      required: true
+
+  - type: textarea
+    id: errors
+    attributes:
+      label: Lua errors
+      description: Paste any Lua error here. The BugSack addon makes them easy to copy.
+      render: text
+
+  - type: input
+    id: mouse
+    attributes:
+      label: Mouse model
+      placeholder: "Logitech G502"
+
+  - type: textarea
+    id: addons
+    attributes:
+      label: Other addons
+      description: Especially action bar, key binding and click-casting addons (Bartender, Dominos, ElvUI, Clique and similar).

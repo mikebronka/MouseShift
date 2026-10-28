@@ -1,0 +1,6 @@
+package-as: MouseShift
+
+ignore:
+  - .github
+  - docs
+  - README.md
