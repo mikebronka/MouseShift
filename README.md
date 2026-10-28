@@ -2,7 +2,7 @@
 
 # MouseShift
 
-Bind SHIFT, CTRL or ALT to a mouse button in World of Warcraft.
+Bind Shift, Ctrl and Alt to your mouse buttons in World of Warcraft.
 
 > **Early version.** MouseShift is new. If something does not work, please [open an issue](https://github.com/mikebronka/MouseShift/issues/new/choose).
 

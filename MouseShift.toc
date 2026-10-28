@@ -1,6 +1,6 @@
 ## Interface: 120105, 16001
 ## Title: MouseShift
-## Notes: Use a mouse button as a Shift, Ctrl or Alt modifier for your keybindings.
+## Notes: Bind Shift, Ctrl and Alt to your mouse buttons.
 ## Author: Mike Bronka
 ## Version: @project-version@
 ## X-Website: https://www.mikebronka.com
