@@ -2,7 +2,7 @@
 
 Bind SHIFT, CTRL or ALT to a mouse button in World of Warcraft.
 
-> **Work in progress.** MouseShift is not released yet. The first version is being tested in combat.
+> **Work in progress.** MouseShift is not released yet. The first version is being tested.
 
 Hold the button under your thumb, press `2`, and the game does whatever you have on `SHIFT-2`. No awkward key stretches, twice as many bindings within reach of your left hand, and no external key remapping software.
 
@@ -39,10 +39,21 @@ Search for **MouseShift** in the CurseForge app, the Wago app or WowUp.
 
 ## Usage
 
-1. Type `/mouseshift` to open the configuration window.
+1. Type `/mouseshift` to open the configuration window. You can also open it from the addons button next to the minimap, or from Options > AddOns > MouseShift.
 2. Click the SHIFT field with the mouse button you want to use as SHIFT.
 3. Do the same for CTRL and ALT if you want them.
 4. Close the window. Done.
+
+Hold two assigned buttons together to reach your CTRL-SHIFT, ALT-SHIFT or ALT-CTRL bindings, or all three for ALT-CTRL-SHIFT.
+
+### Commands
+
+| Command | What it does |
+| --- | --- |
+| `/mouseshift` | Open or close the configuration window |
+| `/mouseshift list` | Show which keys each layer uses |
+| `/mouseshift reset` | Clear all mouse buttons |
+| `/mouseshift help` | Show the commands |
 
 <!-- Screenshot: assigning a button. Save as docs/images/assign-button.png -->
 <!-- ![Assigning a mouse button](docs/images/assign-button.png) -->
@@ -69,4 +80,4 @@ Open an [issue](https://github.com/mikebronka/MouseShift/issues/new/choose). Ple
 
 ## License
 
-[MIT](LICENSE) © Mike Bronka
+[MIT](LICENSE) © [Mike Bronka](https://www.mikebronka.com)

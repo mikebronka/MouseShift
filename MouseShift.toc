@@ -3,5 +3,12 @@
 ## Notes: Use a mouse button as a Shift, Ctrl or Alt modifier for your keybindings.
 ## Author: Mike Bronka
 ## Version: @project-version@
+## X-Website: https://www.mikebronka.com
+## X-License: MIT
+## SavedVariables: MouseShiftDB
+## AddonCompartmentFunc: MouseShift_OnAddonCompartmentClick
 
-MouseShift.lua
+# MouseShift by Mike Bronka - https://www.mikebronka.com
+
+Core.lua
+Config.lua
