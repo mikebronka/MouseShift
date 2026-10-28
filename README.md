@@ -2,6 +2,9 @@
 <h3>MouseShift</h3>
 
 Bind Shift, Ctrl and Alt to your mouse buttons in World of Warcraft.
+&nbsp;&nbsp;
+
+&nbsp;&nbsp;
 
 [CurseForge](https://www.curseforge.com/wow/addons/mouseshift) · [Discord](https://discord.gg/cbmqVcNq7) · [Releases](https://github.com/mikebronka/MouseShift/releases)<br clear="left">
 
