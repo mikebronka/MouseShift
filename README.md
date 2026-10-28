@@ -1,5 +1,4 @@
 <img src="docs/images/logo.png" alt="MouseShift logo" width="112" align="left">
-
 <h3>MouseShift</h3>
 
 Bind Shift, Ctrl and Alt to your mouse buttons in World of Warcraft.
