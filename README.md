@@ -36,7 +36,7 @@ Search for **MouseShift** in the CurseForge app, the Wago app or WowUp.
 1. Download `MouseShift-vX.Y.Z.zip` from the latest [release](https://github.com/mikebronka/MouseShift/releases/latest). Do not use the "Source code" files GitHub adds to every release: their folder has the wrong name and the game will not load it.
 2. Extract it into your AddOns folder:
    - Retail: `World of Warcraft\_retail_\Interface\AddOns\`
-   - WoW Forever: the `Interface\AddOns\` folder of your WoW Forever installation
+   - WoW Forever: `World of Warcraft\_forever_\Interface\AddOns\`
 3. You should end up with `Interface\AddOns\MouseShift\MouseShift.toc`.
 4. Restart the game and make sure MouseShift is enabled in the AddOns list.
 
