@@ -33,7 +33,7 @@ jobs:
             exit 0
           fi
           tag="v$version"
-          title="MouseShift $version"
+          title="$tag"
 
           # Release notes: everything under the version heading, up to the next one.
           awk -v heading="## $version" '
