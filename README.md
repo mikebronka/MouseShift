@@ -12,8 +12,7 @@ Bind Shift, Ctrl and Alt to your mouse buttons in World of Warcraft.
 
 Hold the button under your thumb, press `2`, and the game does whatever you have on `SHIFT-2`. No awkward key stretches, twice as many bindings within reach of your left hand, and no external key remapping software.
 
-<!-- Screenshot: the configuration window. Save as docs/images/config-window.png -->
-<!-- ![The MouseShift configuration window](docs/images/config-window.png) -->
+![The MouseShift configuration window](docs/images/config-window.png)
 
 ## Features
 
@@ -61,8 +60,7 @@ Hold two assigned buttons together to reach your CTRL-SHIFT, ALT-SHIFT or ALT-CT
 | `/mouseshift reset` | Clear all mouse buttons |
 | `/mouseshift help` | Show the commands |
 
-<!-- Screenshot: assigning a button. Save as docs/images/assign-button.png -->
-<!-- ![Assigning a mouse button](docs/images/assign-button.png) -->
+![Assigning a mouse button](docs/images/assign-button.png)
 
 The left and right mouse buttons cannot be used, because the game needs them for targeting and the camera.
 
