@@ -36,7 +36,7 @@ Search for **MouseShift** in the CurseForge app, the Wago app or WowUp.
 
 ### Manual
 
-1. Download `MouseShift-x.y.z.zip` from the latest [release](https://github.com/mikebronka/MouseShift/releases/latest).
+1. Download `MouseShift-vX.Y.Z.zip` from the latest [release](https://github.com/mikebronka/MouseShift/releases/latest). Do not use the "Source code" files GitHub adds to every release: their folder has the wrong name and the game will not load it.
 2. Extract it into your AddOns folder:
    - Retail: `World of Warcraft\_retail_\Interface\AddOns\`
    - WoW Forever: the `Interface\AddOns\` folder of your WoW Forever installation
