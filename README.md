@@ -1,8 +1,10 @@
-<h1><img src="docs/images/logo.png" alt="MouseShift logo" width="96" align="middle">&nbsp; MouseShift</h1>
+<img src="docs/images/logo.png" alt="MouseShift logo" width="112" align="left">
+
+<h3>MouseShift</h3>
 
 Bind Shift, Ctrl and Alt to your mouse buttons in World of Warcraft.
 
-[CurseForge](https://www.curseforge.com/wow/addons/mouseshift) · [Discord](https://discord.gg/cbmqVcNq7) · [Releases](https://github.com/mikebronka/MouseShift/releases)
+[CurseForge](https://www.curseforge.com/wow/addons/mouseshift) · [Discord](https://discord.gg/cbmqVcNq7) · [Releases](https://github.com/mikebronka/MouseShift/releases)<br clear="left">
 
 > **Early version.** MouseShift is new. If something does not work, please [open an issue](https://github.com/mikebronka/MouseShift/issues/new/choose).
 
