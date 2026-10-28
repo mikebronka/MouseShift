@@ -1,0 +1,7 @@
+## Interface: 120100, 16001
+## Title: MouseShift
+## Notes: Use a mouse button as a Shift, Ctrl or Alt modifier for your keybindings.
+## Author: Mike Bronka
+## Version: @project-version@
+
+MouseShift.lua
