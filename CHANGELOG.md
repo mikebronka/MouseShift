@@ -1,5 +1,7 @@
 # Changelog
 
+Version numbers: fixes raise the last number (0.1.1), feature releases raise the middle number (0.2.0), and 1.0.0 will be the first stable release.
+
 ## 0.1.0
 
 First release.
