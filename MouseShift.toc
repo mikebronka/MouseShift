@@ -7,6 +7,7 @@
 ## X-License: MIT
 ## X-Curse-Project-ID: 1770978
 ## X-Wago-ID: nGv9rqKx
+## X-WoWI-ID: 27280
 ## IconTexture: Interface\AddOns\MouseShift\Media\icon
 ## SavedVariables: MouseShiftDB
 ## AddonCompartmentFunc: MouseShift_OnAddonCompartmentClick
