@@ -56,10 +56,15 @@ All of them without moving your left hand away from its usual keys. In practice 
 - **Players who find modifier keys uncomfortable**, for example after long sessions, or because of hand fatigue or limited reach.
 - **Anyone who used AutoHotKey or mouse software for this** and would rather have it inside the game.
 
-## What it is not
+## A companion to your other addons
 
-- It is not an action bar addon. It works with whatever action bars you use.
-- It is not a click-casting addon. Shift-click on a raid frame still needs the real Shift key. See [How it works](how-it-works.md#what-is-not-possible).
-- It does not create macros or change your keybinds. It only adds layers on top of them.
+MouseShift does one small thing: it puts Shift, Ctrl and Alt under your thumb. Everything else stays with the addons you already use, and MouseShift makes them reach further.
+
+- **Action bars** (the default bars, Bartender, Dominos, ElvUI and others): MouseShift picks up the Shift, Ctrl and Alt keybinds you set there and puts them under your thumb. No bar settings to change.
+- **Raid frames and click-casting** (Grid2, VuhDo, Cell, Clique, the game's click bindings): keep healing with clicks as you do now. MouseShift adds layers to your keys, so the spells you cast with keys on mouseover get more room.
+- **Keybinding addons** (BindPad, SpellBinding and others): every Shift, Ctrl or Alt keybind they create becomes reachable with the thumb as well.
+- **Macros:** your mouseover and other macros work unchanged on every layer.
+
+MouseShift creates no bars, frames or macros of its own and changes none of yours. It only adds layers on top of what you already have, which is why it fits next to almost any setup. The few things it cannot reach, such as Shift-click in the interface, are explained in [How it works](how-it-works.md#what-is-not-possible).
 
 Next: [Getting started](getting-started.md)

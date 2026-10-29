@@ -23,13 +23,16 @@ Your mouseover macros do not need any change. A typical one looks like this:
 
 Put it on 2 and another macro on Shift-2, and the thumb button switches between them.
 
-## Click-casting does not
+## Together with click-casting
 
-Click-casting means clicking a raid frame to cast: left-click for one heal, Shift-left-click for another. This is how Clique, the click-casting of raid frame addons such as Grid2 or VuhDo, and the game's own click bindings work.
+Many healers click raid frames to cast: left-click for one heal, Shift-left-click for another. This is what Clique, the click-casting of raid frame addons such as Grid2, VuhDo or Cell, and the game's own click bindings do.
 
-MouseShift cannot change clicks. Shift-click on a frame still needs the real Shift key. If you heal with click-casting, MouseShift will not add layers to your clicks. It still adds layers to your keys, so you can move some spells from clicks to keys.
+MouseShift works alongside them. Your clicks stay exactly as they are, handled by your click-casting addon, and MouseShift adds layers to your keys. Together they give you:
 
-The reason is explained in [How it works](how-it-works.md#what-is-not-possible).
+- **clicks** on raid frames for the heals you cast most, as before
+- **keys on mouseover**, with Shift, Ctrl and Alt under the thumb, for everything else: cooldowns, dispels, utility, defensives
+
+The modified clicks themselves (Shift-click and so on) still use the real Shift key on the keyboard. MouseShift works with keys, not with clicks; [How it works](how-it-works.md#what-is-not-possible) explains why.
 
 ## An example layout
 
