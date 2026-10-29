@@ -27,6 +27,8 @@ Hold the button under your thumb, press **2**, and the game does whatever you ha
 3. Do the same for Ctrl and Alt if you want them.
 4. Close the window. Done.
 
+&nbsp;
+
 ![The Shift field waiting for a mouse button or key](https://raw.githubusercontent.com/mikebronka/MouseShift/main/docs/images/assign-listening.png)
 
 ![Mouse Button 4 assigned as Shift](https://raw.githubusercontent.com/mikebronka/MouseShift/main/docs/images/assign-key.png)
@@ -62,7 +64,9 @@ The side buttons of these mice usually send keyboard keys (1, 2, 3… or the num
 ---
 
 Full documentation: [GitHub](https://github.com/mikebronka/MouseShift)
+
 Found a problem? Report it on [GitHub](https://github.com/mikebronka/MouseShift/issues).
+
 Questions and feedback: [Discord](https://discord.gg/cbmqVcNq7)
 
 Made by [Mike Bronka](https://www.mikebronka.com).
