@@ -42,9 +42,11 @@ jobs:
             found { print }
           ' CHANGELOG.md > notes.md
 
-          # Drafts are not returned by the release-by-tag endpoint, so search the list.
+          # Drafts are not returned by the release-by-tag endpoint, so search the
+          # list. GitHub can replace a draft's tag with "untagged-...", so a
+          # draft is also matched by its title.
           release=$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
-            --jq ".[] | select(.tag_name == \"$tag\") | \"\(.id) \(.draft)\"" | head -n 1)
+            --jq ".[] | select(.tag_name == \"$tag\" or (.draft and .name == \"$title\")) | \"\(.id) \(.draft)\"" | head -n 1)
 
           if [ -z "$release" ]; then
             gh api "repos/$GITHUB_REPOSITORY/releases" \
@@ -56,7 +58,7 @@ jobs:
             draft=${release##* }
             if [ "$draft" = "true" ]; then
               gh api -X PATCH "repos/$GITHUB_REPOSITORY/releases/$id" \
-                -f target_commitish="$GITHUB_SHA" -f name="$title" -F body=@notes.md > /dev/null
+                -f tag_name="$tag" -f target_commitish="$GITHUB_SHA" -f name="$title" -F body=@notes.md > /dev/null
               echo "Updated draft release $tag."
             else
               echo "$tag is already published. Add a new version to CHANGELOG.md for the next release."
