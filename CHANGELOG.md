@@ -2,6 +2,12 @@
 
 Version numbers: fixes raise the last number (0.1.1), feature releases raise the middle number (0.2.0), and 1.0.0 will be the first stable release.
 
+## 0.2.0
+
+- Any key can now be a modifier, not only a mouse button. Left-click a field in the settings window and press the key. This makes MMO mice whose side buttons send keyboard keys (such as the Razer Naga) work with MouseShift.
+- Escape, Enter, movement keys and the real Shift, Ctrl and Alt keys cannot be assigned, so the game stays usable.
+- While a field waits for a key, the key does not reach the game, so nothing is cast by accident. Escape cancels.
+
 ## 0.1.0
 
 First release.

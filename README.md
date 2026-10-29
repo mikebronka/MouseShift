@@ -19,6 +19,7 @@ Hold the button under your thumb, press `2`, and the game does whatever you have
 - Turn any extra mouse button into SHIFT, CTRL or ALT. Use one, two or all three.
 - Hold two of them together for combinations such as CTRL-SHIFT.
 - Assign a button by clicking it. No need to know whether your thumb button is Button 4 or Button 5.
+- Works with MMO mice whose side buttons send keyboard keys, such as the Razer Naga: any key can be a modifier too.
 - Works in combat.
 - Uses your existing SHIFT, CTRL and ALT bindings. Nothing to rebind.
 - Works with the default action bars and with action bar addons.
@@ -47,7 +48,7 @@ Search for **MouseShift** in the CurseForge app, the Wago app or WowUp.
 ## Usage
 
 1. Type `/mouseshift` to open the configuration window. You can also open it from the addons button next to the minimap, or from Options > AddOns > MouseShift.
-2. Click the SHIFT field with the mouse button you want to use as SHIFT.
+2. Click the SHIFT field with the mouse button you want to use as SHIFT. To use a key instead, left-click the field and press the key.
 3. Do the same for CTRL and ALT if you want them.
 4. Close the window. Done.
 
@@ -64,7 +65,7 @@ Hold two assigned buttons together to reach your CTRL-SHIFT, ALT-SHIFT or ALT-CT
 
 ![Assigning a mouse button](docs/images/assign-button.png)
 
-The left and right mouse buttons cannot be used, because the game needs them for targeting and the camera.
+The left and right mouse buttons cannot be used, because the game needs them for targeting and the camera. Escape, Enter, movement keys and the real Shift, Ctrl and Alt keys cannot be used either.
 
 ## Limitations
 
@@ -76,6 +77,9 @@ The left and right mouse buttons cannot be used, because the game needs them for
 
 **Is this allowed?**
 MouseShift only uses the game's own key binding system. It does not automate anything: one key press is still one action.
+
+**The side buttons of my mouse type numbers or other keys.**
+Many MMO mice, such as the Razer Naga, send keyboard keys from their side buttons. Left-click a field in the MouseShift window and press the side button: it becomes that modifier. A key used as a modifier no longer does its own action.
 
 **My mouse button already does something in the game.**
 MouseShift takes over that button while it is assigned. The configuration window tells you what was bound to it before.

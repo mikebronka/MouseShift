@@ -2,9 +2,9 @@
 -- Copyright (c) 2026 Mike Bronka - https://www.mikebronka.com
 -- Released under the MIT License.
 --
--- Core: turns mouse buttons into Shift, Ctrl and Alt modifiers.
+-- Core: turns mouse buttons, or other keys, into Shift, Ctrl and Alt modifiers.
 --
--- Every assigned mouse button (the "trigger") is bound to a click on a secure
+-- Every assigned mouse button or key (the "trigger") is bound to a click on a secure
 -- handler button. The click carries the modifier name ("SHIFT", "CTRL" or
 -- "ALT") and fires on both press and release. A restricted snippet keeps
 -- track of which triggers are held and swaps in the matching layer: for
@@ -49,6 +49,21 @@ local EXCLUDED_KEYS = {
     BUTTON1 = true,
     BUTTON2 = true,
     ESCAPE = true,
+}
+
+-- Keys that cannot be a trigger, on top of EXCLUDED_KEYS.
+local FORBIDDEN_TRIGGERS = {
+    ENTER = true,
+    NUMPADENTER = true,
+    PRINTSCREEN = true,
+}
+
+-- The real modifier keys, as reported by keyboard events.
+local MODIFIER_KEYS = {
+    SHIFT = true, LSHIFT = true, RSHIFT = true,
+    CTRL = true, LCTRL = true, RCTRL = true,
+    ALT = true, LALT = true, RALT = true,
+    META = true, LMETA = true, RMETA = true,
 }
 
 -- Keys probed directly with GetBindingAction. This catches bindings that do
@@ -126,6 +141,30 @@ function ns.KeyDisplayName(key)
     return key
 end
 
+-- Checks whether a key can be a trigger. Returns nil when it can, or a reason:
+-- "reserved" (main mouse buttons, Escape, Enter, Print Screen), "modifier"
+-- (Shift, Ctrl and Alt themselves) or "movement" (a keyboard key bound to
+-- movement). Saved settings are checked with skipBindings, because the
+-- player's bindings are not loaded yet at that point.
+function ns.CheckTrigger(key, skipBindings)
+    if type(key) ~= "string" or key == "" or HasModifier(key) then
+        return "reserved"
+    end
+    if EXCLUDED_KEYS[key] or FORBIDDEN_TRIGGERS[key] then
+        return "reserved"
+    end
+    if MODIFIER_KEYS[key] then
+        return "modifier"
+    end
+    if not skipBindings and not key:find("^BUTTON%d+$") then
+        local action = GetBindingAction(key)
+        if action and EXCLUDED_ACTIONS[action] then
+            return "movement"
+        end
+    end
+    return nil
+end
+
 -- Readable name of a binding action, for example "Action Button 1".
 function ns.ActionDisplayName(action)
     local name = _G["BINDING_NAME_" .. action]
@@ -148,7 +187,7 @@ local function InitDatabase()
     end
     -- Drop anything that is not a valid trigger.
     for modifier, key in pairs(MouseShiftDB.triggers) do
-        if not MODIFIER_BIT[modifier] or type(key) ~= "string" or EXCLUDED_KEYS[key] then
+        if not MODIFIER_BIT[modifier] or type(key) ~= "string" or ns.CheckTrigger(key, true) then
             MouseShiftDB.triggers[modifier] = nil
         end
     end
@@ -403,6 +442,9 @@ end
 
 function ns.SetTrigger(modifier, key)
     if not MODIFIER_BIT[modifier] or InCombatLockdown() then
+        return false
+    end
+    if key and ns.CheckTrigger(key) then
         return false
     end
     if key then

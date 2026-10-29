@@ -4,20 +4,28 @@
 --
 -- Config: the settings window. Each modifier has a field that is assigned
 -- by clicking it with the mouse button the player wants to use, so nobody
--- has to know whether their thumb button is Button 4 or Button 5.
+-- has to know whether their thumb button is Button 4 or Button 5. A left
+-- click starts listening for a key instead, for mice whose side buttons send
+-- keyboard keys, or for any other key the player wants to use.
 
 local _, ns = ...
 
 local L = {
     TITLE = "MouseShift",
-    INTRO = "Click a field with the mouse button you want to use as that modifier.",
-    FOOTER = "Hold the mouse button and press a key to use its Shift, Ctrl or Alt binding.",
-    EMPTY = "Click here with a mouse button",
+    INTRO = "Click a field with the mouse button you want to use, or left-click it and press a key.",
+    FOOTER = "Hold the assigned button or key and press another key to use its Shift, Ctrl or Alt binding.",
+    EMPTY = "Click to assign",
+    LISTENING = "Press a key or mouse button",
+    LISTEN_HINT = "Press the key you want to use as %s, or click the field with a mouse button. Escape cancels.",
     CLEAR = "Clear",
     KEYS_ONE = "%d binding",
     KEYS_MANY = "%d bindings",
-    MAIN_BUTTONS = "The left and right mouse buttons are needed by the game. Click the field with the button you want to use.",
+    MAIN_BUTTONS = "The left and right mouse buttons are needed by the game and cannot be used.",
     UNSUPPORTED = "This button cannot be used.",
+    RESERVED = "%s cannot be used as a modifier.",
+    MODIFIER_KEY = "Shift, Ctrl and Alt themselves cannot be used. Press another key.",
+    MOVEMENT_KEY = "%s is used for movement and cannot be a modifier.",
+    CANCELLED = "Cancelled.",
     ASSIGNED = "%s now works as %s.",
     MOVED = "%s now works as %s instead of %s.",
     OVERRIDES = "It was bound to \"%s\". That binding comes back when you clear it.",
@@ -25,7 +33,7 @@ local L = {
     COMBAT = "Settings cannot be changed in combat.",
     PENDING = "Changes will be applied when combat ends.",
     OPEN = "Open MouseShift",
-    PANEL_TEXT = "Use mouse buttons as Shift, Ctrl and Alt.",
+    PANEL_TEXT = "Use mouse buttons or other keys as Shift, Ctrl and Alt.",
 }
 
 local MODIFIER_LABELS = {
@@ -39,6 +47,8 @@ local ROW_HEIGHT = 34
 
 local frame
 local rows = {}
+local listener
+local listeningRow
 
 local function PlayClick()
     if PlaySound and SOUNDKIT and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON then
@@ -69,7 +79,10 @@ local function Refresh()
     local locked = InCombatLockdown()
     for _, row in ipairs(rows) do
         local key = ns.GetTrigger(row.modifier)
-        if key then
+        if row == listeningRow then
+            row.capture:SetText("|cffffffff" .. L.LISTENING .. "...|r")
+            row.count:SetText(key and KeysText(ns.LayerSize(row.modifier)) or "")
+        elseif key then
             row.capture:SetText(ns.KeyDisplayName(key))
             row.count:SetText(KeysText(ns.LayerSize(row.modifier)))
         else
@@ -83,24 +96,40 @@ end
 
 ns.OnApplied = Refresh
 
-local function OnCaptureMouseDown(self, button)
-    local modifier = self.modifier
-    if InCombatLockdown() then
-        SetStatus(L.COMBAT, true)
-        return
+local function StopListening()
+    listeningRow = nil
+    if listener then
+        listener:Hide()
     end
-    if button == "LeftButton" or button == "RightButton" then
-        SetStatus(L.MAIN_BUTTONS, true)
-        return
-    end
+end
 
-    local key = ns.MouseButtonToKey(button)
-    if not key then
-        SetStatus(L.UNSUPPORTED, true)
-        return
-    end
+local function StartListening(row)
+    listeningRow = row
+    listener:Show()
+    SetStatus(L.LISTEN_HINT:format(MODIFIER_LABELS[row.modifier]))
+    Refresh()
+end
 
+-- Assigns a mouse button or key to a modifier and reports what happened.
+local function Assign(modifier, key)
+    StopListening()
     local keyName = ns.KeyDisplayName(key)
+
+    local problem = ns.CheckTrigger(key)
+    if problem == "modifier" then
+        SetStatus(L.MODIFIER_KEY, true)
+        Refresh()
+        return
+    elseif problem == "movement" then
+        SetStatus(L.MOVEMENT_KEY:format(keyName), true)
+        Refresh()
+        return
+    elseif problem then
+        SetStatus(L.RESERVED:format(keyName), true)
+        Refresh()
+        return
+    end
+
     local label = MODIFIER_LABELS[modifier]
     local previous = ns.FindModifierForKey(key)
     local message
@@ -123,11 +152,70 @@ local function OnCaptureMouseDown(self, button)
     Refresh()
 end
 
+local function OnCaptureMouseDown(self, button)
+    local row = self.row
+    if InCombatLockdown() then
+        StopListening()
+        SetStatus(L.COMBAT, true)
+        Refresh()
+        return
+    end
+
+    if button == "LeftButton" then
+        if listeningRow == row then
+            StopListening()
+            SetStatus(L.CANCELLED)
+            Refresh()
+        else
+            StartListening(row)
+        end
+        return
+    end
+
+    if button == "RightButton" then
+        StopListening()
+        SetStatus(L.MAIN_BUTTONS, true)
+        Refresh()
+        return
+    end
+
+    local key = ns.MouseButtonToKey(button)
+    if not key then
+        StopListening()
+        SetStatus(L.UNSUPPORTED, true)
+        Refresh()
+        return
+    end
+    Assign(row.modifier, key)
+end
+
+-- Receives key presses while a field is listening. Keys pressed here do not
+-- reach the game, so nothing is cast by accident.
+local function OnListenerKeyDown(_, key)
+    if not listeningRow then
+        return
+    end
+    if key == "ESCAPE" then
+        StopListening()
+        SetStatus(L.CANCELLED)
+        Refresh()
+        return
+    end
+    if InCombatLockdown() then
+        StopListening()
+        SetStatus(L.COMBAT, true)
+        Refresh()
+        return
+    end
+    Assign(listeningRow.modifier, key)
+end
+
 local function OnClearClick(self)
     if InCombatLockdown() then
         SetStatus(L.COMBAT, true)
         return
     end
+    StopListening()
     PlayClick()
     ns.SetTrigger(self.modifier, nil)
     SetStatus(L.CLEARED:format(MODIFIER_LABELS[self.modifier]))
@@ -147,7 +235,7 @@ local function CreateRow(parent, modifier, index)
     row.capture = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
     row.capture:SetPoint("TOPLEFT", 84, top)
     row.capture:SetSize(200, 26)
-    row.capture.modifier = modifier
+    row.capture.row = row
     -- Hook rather than replace, so the template keeps its pressed look.
     row.capture:HookScript("OnMouseDown", OnCaptureMouseDown)
 
@@ -199,6 +287,14 @@ local function CreateConfigFrame()
         rows[index] = CreateRow(frame, modifier, index)
     end
 
+    -- Invisible frame that takes keyboard input while a field is listening.
+    -- It is only shown and hidden later, which is allowed at any time.
+    listener = CreateFrame("Frame", nil, frame)
+    listener:SetAllPoints(frame)
+    listener:EnableKeyboard(true)
+    listener:SetScript("OnKeyDown", OnListenerKeyDown)
+    listener:Hide()
+
     frame.status = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     frame.status:SetPoint("TOPLEFT", 24, -70 - #ns.MODIFIERS * ROW_HEIGHT - 4)
     frame.status:SetPoint("RIGHT", -24, 0)
@@ -217,6 +313,8 @@ local function CreateConfigFrame()
         Refresh()
     end)
 
+    frame:SetScript("OnHide", StopListening)
+
     frame:RegisterEvent("PLAYER_REGEN_DISABLED")
     frame:RegisterEvent("PLAYER_REGEN_ENABLED")
     frame:SetScript("OnEvent", function(_, event)
@@ -224,6 +322,7 @@ local function CreateConfigFrame()
             return
         end
         if event == "PLAYER_REGEN_DISABLED" then
+            StopListening()
             SetStatus(L.COMBAT, true)
         else
             SetStatus("")
