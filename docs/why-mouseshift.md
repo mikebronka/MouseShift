@@ -2,6 +2,14 @@
 
 [Documentation](README.md) › Why MouseShift
 
+## A missing option in the game
+
+The game's key bindings let you put almost anything on a mouse button: spells, macros, movement, camera, menus. One basic thing is missing: **a modifier**. You cannot tell the game "this mouse button is Shift", or Ctrl, or Alt.
+
+MouseShift adds exactly that option, and nothing else. It is the setting that should have been in the key bindings menu all along. Shift is simply the most common use; the same works for Ctrl and Alt, for any extra mouse button and even for any keyboard key.
+
+Because it fills a gap in the game itself rather than in some other addon, MouseShift fits next to practically every addon you use and gives each of them new reach. More on that in [A companion to your other addons](#a-companion-to-your-other-addons).
+
 ## The problem
 
 In World of Warcraft your left hand does almost everything: it moves the character and presses most of your abilities. The keys it can reach comfortably are few, usually the number row from 1 to 5 or 6, and a handful of letters around W, A, S and D.

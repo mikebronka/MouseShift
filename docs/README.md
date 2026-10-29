@@ -2,7 +2,7 @@
 
 <img src="images/logo.png" alt="MouseShift logo" width="96" align="right">
 
-MouseShift turns the extra buttons on your mouse, or any key you choose, into Shift, Ctrl and Alt for World of Warcraft.
+MouseShift adds an option missing from World of Warcraft's own key bindings: **a modifier on the mouse**. It turns the extra buttons on your mouse, or any key you choose, into Shift, Ctrl and Alt, and works alongside practically every other addon.
 
 This documentation follows the addon from the first idea to everyday use.
 
