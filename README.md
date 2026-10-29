@@ -26,6 +26,17 @@ Hold the button under your thumb, press `2`, and the game does whatever you have
 - No changes to your interface. One small window, opened only when you need it.
 - Retail and WoW Forever.
 
+## Documentation
+
+The full documentation, from the idea to everyday use, is in the [docs](docs/README.md) folder:
+
+- [Why MouseShift](docs/why-mouseshift.md): the problem, the idea and who it is for
+- [Getting started](docs/getting-started.md): install, assign your buttons, plan your keybinds
+- [Healers](docs/healers.md): mouseover healing with more keybinds
+- [MMO mice](docs/mmo-mice.md): Razer Naga and similar mice
+- [How it works](docs/how-it-works.md): what happens inside the game
+- [Troubleshooting](docs/troubleshooting.md): common questions and problems
+
 ## Installation
 
 ### Addon manager
