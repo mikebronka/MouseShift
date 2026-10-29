@@ -7,6 +7,9 @@ Version numbers: fixes raise the last number (0.1.1), feature releases raise the
 - Any key can now be a modifier, not only a mouse button. Left-click a field in the settings window and press the key. This makes MMO mice whose side buttons send keyboard keys (such as the Razer Naga) work with MouseShift.
 - Escape, Enter, movement keys and the real Shift, Ctrl and Alt keys cannot be assigned, so the game stays usable.
 - While a field waits for a key, the key does not reach the game, so nothing is cast by accident. Escape cancels.
+- A layer no longer stays on when a mouse button is released while the game window is not focused, for example after Alt-Tab. Out of combat, MouseShift notices the released button and switches the layer off.
+- Every layer is switched off after a loading screen, so a key or button released during it cannot leave a layer on.
+- The mouse wheel cannot be assigned, because it has no release event.
 
 ## 0.1.0
 

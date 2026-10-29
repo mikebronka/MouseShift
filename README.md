@@ -70,6 +70,7 @@ The left and right mouse buttons cannot be used, because the game needs them for
 ## Limitations
 
 - **Macro conditions.** The game does not see a real SHIFT key, so macros using `[mod:shift]`, `[mod:ctrl]` or `[mod:alt]` will not react to the mouse button. The same applies to action bar paging on a modifier key.
+- **Clicks are not changed.** MouseShift works on key bindings, so Shift-click in the interface (linking an item in chat, Shift-click casting on raid frames with Clique or the game's click bindings) still needs the real Shift key.
 - **Movement keys are not mirrored.** Releasing the mouse button before a movement key would leave your character running.
 - **Settings cannot be changed in combat.** The game blocks binding changes from addons during combat. Using MouseShift in combat works normally.
 

@@ -51,11 +51,14 @@ local EXCLUDED_KEYS = {
     ESCAPE = true,
 }
 
--- Keys that cannot be a trigger, on top of EXCLUDED_KEYS.
+-- Keys that cannot be a trigger, on top of EXCLUDED_KEYS. The mouse wheel
+-- has no release event, so a layer on it would never switch off.
 local FORBIDDEN_TRIGGERS = {
     ENTER = true,
     NUMPADENTER = true,
     PRINTSCREEN = true,
+    MOUSEWHEELUP = true,
+    MOUSEWHEELDOWN = true,
 }
 
 -- The real modifier keys, as reported by keyboard events.
@@ -436,6 +439,107 @@ function ns.Apply()
     return true
 end
 
+---------------------------------------------------------------------------
+-- Stuck layer guard
+---------------------------------------------------------------------------
+
+-- If a trigger is released while the game window is not focused (for
+-- example after Alt-Tab), the game never sees the release and the layer
+-- stays on. Out of combat, mouse button triggers are checked regularly and
+-- a layer whose button is no longer held is switched off. Keyboard keys
+-- cannot be checked this way; pressing them again fixes it.
+
+-- "BUTTON3" -> "MiddleButton", "BUTTON4" -> "Button4"
+local function KeyToMouseButton(key)
+    if key == "BUTTON3" then
+        return "MiddleButton"
+    end
+    local number = key:match("^BUTTON(%d+)$")
+    if number then
+        return "Button" .. number
+    end
+    return nil
+end
+
+local CHECK_INTERVAL = 0.5
+-- A button must be seen as released this many times in a row, so a single
+-- odd reading never switches a layer off while the player holds it.
+local MISSES_NEEDED = 2
+local misses = {}
+-- Buttons the game has reported as held at least once while their layer was
+-- on. Only these are trusted to be released, so a button the game does not
+-- report correctly can never switch its layer off by mistake.
+local verified = {}
+
+local function SwitchLayer(newMask)
+    local active = driver:GetAttribute("active-mask") or 0
+    if newMask == active then
+        return
+    end
+    local count = driver:GetAttribute("layer" .. active .. "-count") or 0
+    for i = 1, count do
+        SetOverrideBinding(driver, true, driver:GetAttribute("layer" .. active .. "-key" .. i), nil)
+    end
+    count = driver:GetAttribute("layer" .. newMask .. "-count") or 0
+    for i = 1, count do
+        SetOverrideBinding(driver, true, driver:GetAttribute("layer" .. newMask .. "-key" .. i),
+            driver:GetAttribute("layer" .. newMask .. "-action" .. i))
+    end
+    driver:SetAttribute("active-mask", newMask)
+end
+
+local function CheckStuckLayers()
+    if InCombatLockdown() or not IsMouseButtonDown then
+        return
+    end
+    if (driver:GetAttribute("active-mask") or 0) == 0 then
+        wipe(misses)
+        return
+    end
+
+    local changed = false
+    for _, modifier in ipairs(ns.MODIFIERS) do
+        local button = driver:GetAttribute("held-" .. modifier) and KeyToMouseButton(ns.GetTrigger(modifier) or "")
+        local down = button and IsMouseButtonDown(button)
+        if down then
+            verified[button] = true
+        end
+        if button and not down and verified[button] then
+            misses[modifier] = (misses[modifier] or 0) + 1
+            if misses[modifier] >= MISSES_NEEDED then
+                driver:SetAttribute("held-" .. modifier, nil)
+                misses[modifier] = nil
+                changed = true
+            end
+        else
+            misses[modifier] = nil
+        end
+    end
+
+    if changed then
+        local mask = 0
+        for _, modifier in ipairs(ns.MODIFIERS) do
+            if driver:GetAttribute("held-" .. modifier) then
+                mask = mask + MODIFIER_BIT[modifier]
+            end
+        end
+        SwitchLayer(mask)
+    end
+end
+
+-- Switches every layer off. Used after loading screens, where no trigger
+-- can still be held.
+local function ReleaseAllLayers()
+    if InCombatLockdown() then
+        return
+    end
+    for _, modifier in ipairs(ns.MODIFIERS) do
+        driver:SetAttribute("held-" .. modifier, nil)
+    end
+    wipe(misses)
+    SwitchLayer(0)
+end
+
 function ns.IsApplyPending()
     return rebuildPending
 end
@@ -502,6 +606,7 @@ events:RegisterEvent("ADDON_LOADED")
 events:RegisterEvent("PLAYER_LOGIN")
 events:RegisterEvent("UPDATE_BINDINGS")
 events:RegisterEvent("PLAYER_REGEN_ENABLED")
+events:RegisterEvent("PLAYER_ENTERING_WORLD")
 events:SetScript("OnEvent", function(_, event, arg1)
     if event == "ADDON_LOADED" then
         if arg1 == ADDON_NAME then
@@ -510,11 +615,14 @@ events:SetScript("OnEvent", function(_, event, arg1)
         end
     elseif event == "PLAYER_LOGIN" then
         ns.Apply()
+        C_Timer.NewTicker(CHECK_INTERVAL, CheckStuckLayers)
         if not ns.HasAnyTrigger() then
             ns.Print("Type /mouseshift to choose your mouse buttons.")
         end
     elseif event == "UPDATE_BINDINGS" then
         RequestApply()
+    elseif event == "PLAYER_ENTERING_WORLD" then
+        ReleaseAllLayers()
     elseif event == "PLAYER_REGEN_ENABLED" then
         if rebuildPending then
             ns.Apply()
