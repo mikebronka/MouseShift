@@ -52,6 +52,12 @@ Search for **MouseShift** in the CurseForge app, the Wago app or WowUp.
 3. Do the same for CTRL and ALT if you want them.
 4. Close the window. Done.
 
+| Waiting for a button or key | Assigned |
+| --- | --- |
+| ![The SHIFT field waiting for a mouse button or key](docs/images/assign-listening.png) | ![Mouse Button 4 assigned as SHIFT](docs/images/assign-key.png) |
+
+The left and right mouse buttons cannot be used, because the game needs them for targeting and the camera. Escape, Enter, movement keys and the real Shift, Ctrl and Alt keys cannot be used either.
+
 Hold two assigned buttons together to reach your CTRL-SHIFT, ALT-SHIFT or ALT-CTRL bindings, or all three for ALT-CTRL-SHIFT.
 
 ### Commands
@@ -60,12 +66,9 @@ Hold two assigned buttons together to reach your CTRL-SHIFT, ALT-SHIFT or ALT-CT
 | --- | --- |
 | `/mouseshift` | Open or close the configuration window |
 | `/mouseshift list` | Show which keys each layer uses |
-| `/mouseshift reset` | Clear all mouse buttons |
+| `/mouseshift reset` | Clear all mouse buttons and keys |
 | `/mouseshift help` | Show the commands |
 
-![Assigning a mouse button](docs/images/assign-button.png)
-
-The left and right mouse buttons cannot be used, because the game needs them for targeting and the camera. Escape, Enter, movement keys and the real Shift, Ctrl and Alt keys cannot be used either.
 
 ## MMO mice (Razer Naga, Logitech G600, Corsair Scimitar and similar)
 
