@@ -48,8 +48,26 @@ local EXCLUDED_ACTIONS = {
 local EXCLUDED_KEYS = {
     BUTTON1 = true,
     BUTTON2 = true,
+    LEFTBUTTON = true,
+    RIGHTBUTTON = true,
     ESCAPE = true,
 }
+
+-- Actions that control the camera and the character with the mouse. A mouse
+-- button bound to one of these is never taken over, whatever its number.
+local MOUSE_CONTROL_ACTIONS = {
+    CAMERAORSELECTORMOVE = true,
+    TURNORACTION = true,
+    MOVEANDSTEER = true,
+}
+
+-- True for the left or right mouse button under any of the names the game
+-- uses for them in events and bindings.
+local function IsMainMouseButton(key)
+    local upper = key:upper()
+    return upper == "BUTTON1" or upper == "BUTTON2" or upper == "LEFTBUTTON" or upper == "RIGHTBUTTON"
+end
+ns.IsMainMouseButton = IsMainMouseButton
 
 -- Keys that cannot be a trigger, on top of EXCLUDED_KEYS. The mouse wheel
 -- has no release event, so a layer on it would never switch off.
@@ -153,16 +171,33 @@ function ns.CheckTrigger(key, skipBindings)
     if type(key) ~= "string" or key == "" or HasModifier(key) then
         return "reserved"
     end
-    if EXCLUDED_KEYS[key] or FORBIDDEN_TRIGGERS[key] then
+    if IsMainMouseButton(key) or EXCLUDED_KEYS[key] or FORBIDDEN_TRIGGERS[key] then
         return "reserved"
     end
     if MODIFIER_KEYS[key] then
         return "modifier"
     end
-    if not skipBindings and not key:find("^BUTTON%d+$") then
+
+    local mouseNumber = tonumber(key:match("^BUTTON(%d+)$"))
+    if mouseNumber then
+        if mouseNumber < 3 then
+            return "reserved"
+        end
+    elseif key:lower():find("button", 1, true) then
+        -- Mouse button names from events ("MiddleButton", "Button4") are
+        -- converted before they get here. Anything else is not a real key.
+        return "reserved"
+    end
+
+    if not skipBindings then
         local action = GetBindingAction(key)
-        if action and EXCLUDED_ACTIONS[action] then
-            return "movement"
+        if action and action ~= "" then
+            if MOUSE_CONTROL_ACTIONS[action] then
+                return "movement"
+            end
+            if not mouseNumber and EXCLUDED_ACTIONS[action] then
+                return "movement"
+            end
         end
     end
     return nil
@@ -290,7 +325,7 @@ local function CollectLayer(mask, triggerKeys)
             return
         end
         local base = combo:sub(#prefix + 1)
-        if base == "" or found[base] or EXCLUDED_KEYS[base] or triggerKeys[base] or HasModifier(base) then
+        if base == "" or found[base] or EXCLUDED_KEYS[base] or IsMainMouseButton(base) or triggerKeys[base] or HasModifier(base) then
             return
         end
         local action = GetBindingAction(combo, true)
@@ -402,7 +437,7 @@ local function BindTriggers()
     ClearOverrideBindings(triggerOwner)
     for _, modifier in ipairs(ns.MODIFIERS) do
         local key = ns.GetTrigger(modifier)
-        if key then
+        if key and not ns.CheckTrigger(key, true) then
             SetOverrideBindingClick(triggerOwner, true, key, driver:GetName(), modifier)
         end
     end
@@ -429,6 +464,9 @@ function ns.Apply()
     lastSignature = signature
 
     ResetActiveLayer()
+    -- Drop every override the driver owns, so nothing from an earlier
+    -- layer table can survive a rebuild.
+    ClearOverrideBindings(driver)
     StoreLayers(layers)
     BindTriggers()
     ns.layers = layers

@@ -2,25 +2,25 @@
 -- Copyright (c) 2026 Mike Bronka - https://www.mikebronka.com
 -- Released under the MIT License.
 --
--- Config: the settings window. Each modifier has a field that is assigned
--- by clicking it with the mouse button the player wants to use, so nobody
--- has to know whether their thumb button is Button 4 or Button 5. A left
--- click starts listening for a key instead, for mice whose side buttons send
--- keyboard keys, or for any other key the player wants to use.
+-- Config: the settings window. A left click on a field makes it wait for
+-- input; the next mouse button or key pressed becomes that modifier. Nobody
+-- has to know whether their thumb button is Button 4 or Button 5, and side
+-- buttons that send keyboard keys work the same way. Nothing is assigned
+-- unless the field was clicked first, so a stray click cannot change it.
 
 local _, ns = ...
 
 local L = {
     TITLE = "MouseShift",
-    INTRO = "Click a field with the mouse button you want to use, or left-click it and press a key.",
+    INTRO = "Click a field, then press the mouse button or key you want to use as that modifier.",
     FOOTER = "Hold the assigned button or key and press another key to use its Shift, Ctrl or Alt binding.",
     EMPTY = "Click to assign",
-    LISTENING = "Press a key or mouse button",
-    LISTEN_HINT = "Press the key you want to use as %s, or click the field with a mouse button. Escape cancels.",
+    LISTENING = "Press a mouse button or key",
+    LISTEN_HINT = "Press the mouse button or key you want to use as %s. Left-click or Escape cancels.",
     CLEAR = "Clear",
     KEYS_ONE = "%d binding",
     KEYS_MANY = "%d bindings",
-    MAIN_BUTTONS = "The left and right mouse buttons are needed by the game and cannot be used.",
+    MAIN_BUTTONS = "The right mouse button is needed by the game and cannot be used. Press another button or key.",
     UNSUPPORTED = "This button cannot be used.",
     RESERVED = "%s cannot be used as a modifier.",
     MODIFIER_KEY = "Shift, Ctrl and Alt themselves cannot be used. Press another key.",
@@ -42,8 +42,15 @@ local MODIFIER_LABELS = {
     ALT = ALT_KEY_TEXT or "Alt",
 }
 
-local WINDOW_WIDTH = 420
+-- The window is sized for the game's default font, which is wider than the
+-- fonts many interface addons use.
+local WINDOW_WIDTH = 480
 local ROW_HEIGHT = 34
+-- Distance from the top of the window to the first row, leaving room for a
+-- two-line introduction.
+local ROWS_TOP = 84
+-- Width of the binding count column on the right.
+local COUNT_WIDTH = 96
 
 local frame
 local rows = {}
@@ -91,6 +98,9 @@ local function Refresh()
         end
         row.capture:SetEnabled(not locked)
         row.clear:SetEnabled(not locked and key ~= nil)
+        if not row.clear:IsEnabled() then
+            row.clear:UnlockHighlight()
+        end
     end
 end
 
@@ -152,47 +162,54 @@ local function Assign(modifier, key)
     Refresh()
 end
 
-local function OnCaptureMouseDown(self, button)
-    local row = self.row
+local function OnCaptureClick(self)
     if InCombatLockdown() then
         StopListening()
         SetStatus(L.COMBAT, true)
         Refresh()
         return
     end
-
-    if button == "LeftButton" then
-        if listeningRow == row then
-            StopListening()
-            SetStatus(L.CANCELLED)
-            Refresh()
-        else
-            StartListening(row)
-        end
-        return
-    end
-
-    if button == "RightButton" then
-        StopListening()
-        SetStatus(L.MAIN_BUTTONS, true)
-        Refresh()
-        return
-    end
-
-    local key = ns.MouseButtonToKey(button)
-    if not key then
-        StopListening()
-        SetStatus(L.UNSUPPORTED, true)
-        Refresh()
-        return
-    end
-    Assign(row.modifier, key)
+    StartListening(self.row)
 end
 
--- Receives key presses while a field is listening. Keys pressed here do not
--- reach the game, so nothing is cast by accident.
+-- While a field is listening, an invisible layer covers the screen and takes
+-- the next mouse button or key, wherever the cursor is. Nothing pressed here
+-- reaches the game, so nothing is cast by accident.
+local function OnListenerMouseDown(_, button)
+    if not listeningRow then
+        return
+    end
+    if InCombatLockdown() then
+        StopListening()
+        SetStatus(L.COMBAT, true)
+        Refresh()
+        return
+    end
+    if button == "LeftButton" then
+        StopListening()
+        SetStatus(L.CANCELLED)
+        Refresh()
+        return
+    end
+    if button == "RightButton" then
+        SetStatus(L.MAIN_BUTTONS, true)
+        return
+    end
+    local key = ns.MouseButtonToKey(button)
+    if not key then
+        SetStatus(L.UNSUPPORTED, true)
+        return
+    end
+    Assign(listeningRow.modifier, key)
+end
+
 local function OnListenerKeyDown(_, key)
     if not listeningRow then
+        return
+    end
+    -- Mouse buttons are handled by OnListenerMouseDown. Never take a mouse
+    -- button from here, whatever name it arrives under.
+    if type(key) ~= "string" or key:lower():find("button", 1, true) then
         return
     end
     if key == "ESCAPE" then
@@ -222,9 +239,50 @@ local function OnClearClick(self)
     Refresh()
 end
 
+-- Makes a template button react to the left mouse button only. The button
+-- itself stops taking the mouse, so the game cannot animate it for other
+-- buttons. An invisible frame on top takes every click instead: a left click
+-- presses the button and runs onClick, anything else is ignored.
+local function LeftClickOnly(button, onClick)
+    button:EnableMouse(false)
+
+    local hit = CreateFrame("Frame", nil, button:GetParent())
+    hit:SetAllPoints(button)
+    hit:SetFrameLevel(button:GetFrameLevel() + 2)
+    hit:EnableMouse(true)
+    hit.button = button
+    button.hit = hit
+
+    hit:SetScript("OnEnter", function()
+        if button:IsEnabled() then
+            button:LockHighlight()
+        end
+    end)
+    hit:SetScript("OnLeave", function()
+        button:UnlockHighlight()
+        if button:IsEnabled() then
+            button:SetButtonState("NORMAL")
+        end
+    end)
+    hit:SetScript("OnMouseDown", function(_, mouseButton)
+        if mouseButton == "LeftButton" and button:IsEnabled() then
+            button:SetButtonState("PUSHED")
+        end
+    end)
+    hit:SetScript("OnMouseUp", function(self, mouseButton)
+        if mouseButton ~= "LeftButton" or not button:IsEnabled() then
+            return
+        end
+        button:SetButtonState("NORMAL")
+        if self:IsMouseOver() then
+            onClick(button)
+        end
+    end)
+end
+
 local function CreateRow(parent, modifier, index)
     local row = { modifier = modifier }
-    local top = -70 - (index - 1) * ROW_HEIGHT
+    local top = -ROWS_TOP - (index - 1) * ROW_HEIGHT
 
     row.label = parent:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
     row.label:SetPoint("TOPLEFT", 24, top - 4)
@@ -234,28 +292,30 @@ local function CreateRow(parent, modifier, index)
 
     row.capture = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
     row.capture:SetPoint("TOPLEFT", 84, top)
-    row.capture:SetSize(200, 26)
+    row.capture:SetSize(190, 26)
     row.capture.row = row
-    -- Hook rather than replace, so the template keeps its pressed look.
-    row.capture:HookScript("OnMouseDown", OnCaptureMouseDown)
+    -- Only a left click reacts. Other mouse buttons do nothing at all here.
+    LeftClickOnly(row.capture, OnCaptureClick)
 
     row.clear = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
     row.clear:SetPoint("LEFT", row.capture, "RIGHT", 6, 0)
     row.clear:SetSize(60, 26)
     row.clear:SetText(L.CLEAR)
     row.clear.modifier = modifier
-    row.clear:SetScript("OnClick", OnClearClick)
+    LeftClickOnly(row.clear, OnClearClick)
 
     row.count = parent:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
     row.count:SetPoint("LEFT", row.clear, "RIGHT", 8, 0)
+    row.count:SetWidth(COUNT_WIDTH)
     row.count:SetJustifyH("LEFT")
+    row.count:SetWordWrap(false)
 
     return row
 end
 
 local function CreateConfigFrame()
     frame = CreateFrame("Frame", "MouseShiftConfig", UIParent, "BasicFrameTemplateWithInset")
-    frame:SetSize(WINDOW_WIDTH, 70 + #ns.MODIFIERS * ROW_HEIGHT + 90)
+    frame:SetSize(WINDOW_WIDTH, ROWS_TOP + #ns.MODIFIERS * ROW_HEIGHT + 90)
     frame:SetPoint("CENTER")
     frame:SetFrameStrata("DIALOG")
     frame:SetClampedToScreen(true)
@@ -278,7 +338,7 @@ local function CreateConfigFrame()
     frame.version:SetText(ns.GetVersion())
 
     frame.intro = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-    frame.intro:SetPoint("TOPLEFT", 24, -36)
+    frame.intro:SetPoint("TOPLEFT", 24, -34)
     frame.intro:SetPoint("RIGHT", -24, 0)
     frame.intro:SetJustifyH("LEFT")
     frame.intro:SetText(L.INTRO)
@@ -287,16 +347,22 @@ local function CreateConfigFrame()
         rows[index] = CreateRow(frame, modifier, index)
     end
 
-    -- Invisible frame that takes keyboard input while a field is listening.
-    -- It is only shown and hidden later, which is allowed at any time.
+    -- Invisible full-screen layer that takes input while a field is
+    -- listening. It is only shown and hidden later, which is allowed at any
+    -- time, also in combat.
     listener = CreateFrame("Frame", nil, frame)
-    listener:SetAllPoints(frame)
+    listener:SetAllPoints(UIParent)
+    listener:SetFrameStrata("FULLSCREEN_DIALOG")
+    listener:EnableMouse(true)
+    listener:EnableMouseWheel(true)
     listener:EnableKeyboard(true)
+    listener:SetScript("OnMouseDown", OnListenerMouseDown)
+    listener:SetScript("OnMouseWheel", function() end)
     listener:SetScript("OnKeyDown", OnListenerKeyDown)
     listener:Hide()
 
     frame.status = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
-    frame.status:SetPoint("TOPLEFT", 24, -70 - #ns.MODIFIERS * ROW_HEIGHT - 4)
+    frame.status:SetPoint("TOPLEFT", 24, -ROWS_TOP - #ns.MODIFIERS * ROW_HEIGHT - 4)
     frame.status:SetPoint("RIGHT", -24, 0)
     frame.status:SetJustifyH("LEFT")
     frame.status:SetJustifyV("TOP")

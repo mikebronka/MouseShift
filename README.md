@@ -18,7 +18,7 @@ Hold the button under your thumb, press `2`, and the game does whatever you have
 
 - Turn any extra mouse button into SHIFT, CTRL or ALT. Use one, two or all three.
 - Hold two of them together for combinations such as CTRL-SHIFT.
-- Assign a button by clicking it. No need to know whether your thumb button is Button 4 or Button 5.
+- Assign a button by pressing it. No need to know whether your thumb button is Button 4 or Button 5.
 - Works with MMO mice whose side buttons send keyboard keys, such as the Razer Naga: any key can be a modifier too.
 - Works in combat.
 - Uses your existing SHIFT, CTRL and ALT bindings. Nothing to rebind.
@@ -48,7 +48,7 @@ Search for **MouseShift** in the CurseForge app, the Wago app or WowUp.
 ## Usage
 
 1. Type `/mouseshift` to open the configuration window. You can also open it from the addons button next to the minimap, or from Options > AddOns > MouseShift.
-2. Click the SHIFT field with the mouse button you want to use as SHIFT. To use a key instead, left-click the field and press the key.
+2. Click the SHIFT field, then press the mouse button or key you want to use as SHIFT. The cursor can be anywhere.
 3. Do the same for CTRL and ALT if you want them.
 4. Close the window. Done.
 
@@ -67,11 +67,21 @@ Hold two assigned buttons together to reach your CTRL-SHIFT, ALT-SHIFT or ALT-CT
 
 The left and right mouse buttons cannot be used, because the game needs them for targeting and the camera. Escape, Enter, movement keys and the real Shift, Ctrl and Alt keys cannot be used either.
 
+## MMO mice (Razer Naga, Logitech G600, Corsair Scimitar and similar)
+
+The side buttons of these mice usually send keyboard keys (1, 2, 3… or the numpad), not mouse buttons. MouseShift handles them like any other key:
+
+- Click a field and press a side button: it becomes Shift, Ctrl or Alt.
+- Or keep the side buttons for spells and use the middle button or a top button as Shift. Hold it and press a side button for its Shift keybind.
+
+**Tip:** if your side buttons send the numpad, the real Shift key does not combine well with them. With Num Lock on, Windows turns Shift + Numpad 1 into End, Shift + Numpad 8 into Up and so on. Use Ctrl or Alt with the numpad, or let MouseShift be your Shift: it does not press the real Shift key, so the numpad stays the numpad.
+
 ## Limitations
 
 - **Macro conditions.** The game does not see a real SHIFT key, so macros using `[mod:shift]`, `[mod:ctrl]` or `[mod:alt]` will not react to the mouse button. The same applies to action bar paging on a modifier key.
 - **Clicks are not changed.** MouseShift works on key bindings, so Shift-click in the interface (linking an item in chat, Shift-click casting on raid frames with Clique or the game's click bindings) still needs the real Shift key.
 - **Movement keys are not mirrored.** Releasing the mouse button before a movement key would leave your character running.
+- **Alt-Tab while holding a keyboard key.** If you release a key used as a modifier while the game window is not focused, its layer can stay on. Press the key once to fix it. Mouse buttons are checked automatically.
 - **Settings cannot be changed in combat.** The game blocks binding changes from addons during combat. Using MouseShift in combat works normally.
 
 ## FAQ
@@ -80,7 +90,7 @@ The left and right mouse buttons cannot be used, because the game needs them for
 MouseShift only uses the game's own key binding system. It does not automate anything: one key press is still one action.
 
 **The side buttons of my mouse type numbers or other keys.**
-Many MMO mice, such as the Razer Naga, send keyboard keys from their side buttons. Left-click a field in the MouseShift window and press the side button: it becomes that modifier. A key used as a modifier no longer does its own action.
+Many MMO mice, such as the Razer Naga, send keyboard keys from their side buttons. Click a field in the MouseShift window and press the side button: it becomes that modifier. A key used as a modifier no longer does its own action.
 
 **My mouse button already does something in the game.**
 MouseShift takes over that button while it is assigned. The configuration window tells you what was bound to it before.
