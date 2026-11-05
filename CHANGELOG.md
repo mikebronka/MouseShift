@@ -6,6 +6,7 @@ Version numbers: fixes raise the last number (0.1.1), feature releases raise the
 
 - MouseShift now shows in the addons list next to the minimap in WoW Forever too, not only in Retail. Click it to open the settings.
 - The entry shows a short tooltip when you point at it.
+- The entry is registered as soon as the addon loads, so lists built early by the game or by other addons include it.
 
 ## 0.2.0
 

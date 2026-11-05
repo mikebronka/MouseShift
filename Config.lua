@@ -492,6 +492,12 @@ local function RegisterSettingsPanel()
     Settings.RegisterAddOnCategory(category)
 end
 
+-- Register in the addon compartment as soon as the addon loads, like most
+-- addons do: WoW Forever builds its list of addon buttons early and may not
+-- add entries registered later. Login tries again in case the compartment
+-- did not exist yet; an existing entry is never added twice.
+RegisterCompartmentEntry()
+
 local loader = CreateFrame("Frame")
 loader:RegisterEvent("PLAYER_LOGIN")
 loader:SetScript("OnEvent", function()
