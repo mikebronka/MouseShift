@@ -35,6 +35,7 @@ local L = {
     OPEN = "Open MouseShift",
     PANEL_TEXT = "Use mouse buttons or other keys as Shift, Ctrl and Alt.",
     COMPARTMENT_HINT = "Click to open the settings.",
+    SHOW_MINIMAP = "Show minimap button",
 }
 
 local MODIFIER_LABELS = {
@@ -52,6 +53,8 @@ local ROW_HEIGHT = 34
 local ROWS_TOP = 84
 -- Width of the binding count column on the right.
 local COUNT_WIDTH = 96
+-- Height of the row with the minimap button checkbox, below the modifiers.
+local OPTIONS_HEIGHT = 32
 
 local frame
 local rows = {}
@@ -103,9 +106,13 @@ local function Refresh()
             row.clear:UnlockHighlight()
         end
     end
+    if frame.minimapCheck and ns.IsMinimapButtonShown then
+        frame.minimapCheck:SetChecked(ns.IsMinimapButtonShown() and true or false)
+    end
 end
 
 ns.OnApplied = Refresh
+ns.OnMinimapButtonChanged = Refresh
 
 local function StopListening()
     listeningRow = nil
@@ -316,7 +323,7 @@ end
 
 local function CreateConfigFrame()
     frame = CreateFrame("Frame", "MouseShiftConfig", UIParent, "BasicFrameTemplateWithInset")
-    frame:SetSize(WINDOW_WIDTH, ROWS_TOP + #ns.MODIFIERS * ROW_HEIGHT + 90)
+    frame:SetSize(WINDOW_WIDTH, ROWS_TOP + #ns.MODIFIERS * ROW_HEIGHT + OPTIONS_HEIGHT + 90)
     frame:SetPoint("CENTER")
     frame:SetFrameStrata("DIALOG")
     frame:SetClampedToScreen(true)
@@ -363,7 +370,28 @@ local function CreateConfigFrame()
     listener:Hide()
 
     frame.status = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
-    frame.status:SetPoint("TOPLEFT", 24, -ROWS_TOP - #ns.MODIFIERS * ROW_HEIGHT - 4)
+    -- Minimap button checkbox. Like the fields, it reacts to the left mouse
+    -- button only; the invisible click layer also covers its label.
+    local check = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
+    check:SetSize(24, 24)
+    check:SetPoint("TOPLEFT", 80, -ROWS_TOP - #ns.MODIFIERS * ROW_HEIGHT - 2)
+    local checkLabel = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+    checkLabel:SetPoint("LEFT", check, "RIGHT", 4, 0)
+    checkLabel:SetText(L.SHOW_MINIMAP)
+    LeftClickOnly(check, function()
+        if ns.SetMinimapButtonShown then
+            PlayClick()
+            ns.SetMinimapButtonShown(not ns.IsMinimapButtonShown())
+        end
+        Refresh()
+    end)
+    check.hit:ClearAllPoints()
+    check.hit:SetPoint("TOPLEFT", check, "TOPLEFT")
+    check.hit:SetPoint("BOTTOM", check, "BOTTOM")
+    check.hit:SetPoint("RIGHT", checkLabel, "RIGHT", 4, 0)
+    frame.minimapCheck = check
+
+    frame.status:SetPoint("TOPLEFT", 24, -ROWS_TOP - #ns.MODIFIERS * ROW_HEIGHT - OPTIONS_HEIGHT - 4)
     frame.status:SetPoint("RIGHT", -24, 0)
     frame.status:SetJustifyH("LEFT")
     frame.status:SetJustifyV("TOP")

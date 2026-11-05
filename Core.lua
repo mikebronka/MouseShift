@@ -229,6 +229,17 @@ local function InitDatabase()
             MouseShiftDB.triggers[modifier] = nil
         end
     end
+    -- Minimap button: "hide" and "minimapPos" are the field names the
+    -- LibDBIcon library uses, so the same table works with it and without it.
+    if type(MouseShiftDB.minimap) ~= "table" then
+        MouseShiftDB.minimap = {}
+    end
+    if type(MouseShiftDB.minimap.hide) ~= "boolean" then
+        MouseShiftDB.minimap.hide = false
+    end
+    if type(MouseShiftDB.minimap.minimapPos) ~= "number" then
+        MouseShiftDB.minimap.minimapPos = 220
+    end
     ns.db = MouseShiftDB
 end
 
@@ -705,12 +716,19 @@ SlashCmdList.MOUSESHIFT = function(input)
             ns.db.triggers[modifier] = nil
         end
         ns.Apply()
-        ns.Print("All mouse buttons cleared.")
+        ns.Print("All mouse buttons and keys cleared.")
+    elseif command == "minimap" then
+        if ns.SetMinimapButtonShown then
+            local show = not ns.IsMinimapButtonShown()
+            ns.SetMinimapButtonShown(show)
+            ns.Print(show and "Minimap button shown." or "Minimap button hidden. Type /mouseshift minimap to show it again.")
+        end
     elseif command == "help" then
         ns.Print("commands:")
         print("  /mouseshift - open the settings window")
         print("  /mouseshift list - show which keys each layer uses")
-        print("  /mouseshift reset - clear all mouse buttons")
+        print("  /mouseshift minimap - show or hide the minimap button")
+        print("  /mouseshift reset - clear all mouse buttons and keys")
     else
         if ns.ToggleConfig then
             ns.ToggleConfig()

@@ -40,7 +40,7 @@ MouseShift was built around a few rules:
 - **Your keybinds stay yours.** MouseShift reads the Shift, Ctrl and Alt keybinds you already have. It never changes or saves your keybinds; clear a button and everything is as before.
 - **Works in combat.** The feature is useless if it stops when the fight starts, so it is built on the part of the game's interface that is allowed to work in combat.
 - **Hard to break.** The left and right mouse buttons, Escape, Enter and movement keys can never be assigned, nothing is assigned by accident, and a layer cannot stay stuck after Alt-Tab or a loading screen.
-- **Small and quiet.** One window, opened only when you need it. No changes to your interface, no minimap button, no extra libraries.
+- **Small and quiet.** One window, opened only when you need it, and a minimap button you can hide. No changes to your interface, no extra libraries.
 
 ## How many keybinds you gain
 

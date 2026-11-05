@@ -20,6 +20,7 @@
 Open the settings window in one of these ways:
 
 - type `/mouseshift`
+- click the MouseShift button on the minimap
 - click the addons button next to the minimap and choose MouseShift
 - Options › AddOns › MouseShift
 
@@ -63,6 +64,7 @@ Three ways to organise them that work well:
 | --- | --- |
 | `/mouseshift` | Open or close the settings window |
 | `/mouseshift list` | Show which keys each layer uses |
+| `/mouseshift minimap` | Show or hide the minimap button |
 | `/mouseshift reset` | Clear all mouse buttons and keys |
 | `/mouseshift help` | Show the commands |
 

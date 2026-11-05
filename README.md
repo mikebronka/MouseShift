@@ -23,7 +23,7 @@ Hold the button under your thumb, press `2`, and the game does whatever you have
 - Works in combat.
 - Uses your existing SHIFT, CTRL and ALT bindings. Nothing to rebind.
 - Works with the default action bars and with action bar addons.
-- No changes to your interface. One small window, opened only when you need it.
+- No changes to your interface. One small window, opened only when you need it, and a minimap button you can hide.
 - Retail and WoW Forever.
 
 ## Documentation
@@ -58,7 +58,7 @@ Search for **MouseShift** in the CurseForge app, the Wago app or WowUp.
 
 ## Usage
 
-1. Type `/mouseshift` to open the configuration window. You can also open it from the addons button next to the minimap, or from Options > AddOns > MouseShift.
+1. Type `/mouseshift` to open the configuration window. You can also click the MouseShift minimap button, choose MouseShift in the addons button next to the minimap, or go to Options > AddOns > MouseShift.
 2. Click the SHIFT field, then press the mouse button or key you want to use as SHIFT. The cursor can be anywhere.
 3. Do the same for CTRL and ALT if you want them.
 4. Close the window. Done.
@@ -77,6 +77,7 @@ Hold two assigned buttons together to reach your CTRL-SHIFT, ALT-SHIFT or ALT-CT
 | --- | --- |
 | `/mouseshift` | Open or close the configuration window |
 | `/mouseshift list` | Show which keys each layer uses |
+| `/mouseshift minimap` | Show or hide the minimap button |
 | `/mouseshift reset` | Clear all mouse buttons and keys |
 | `/mouseshift help` | Show the commands |
 

@@ -13,12 +13,12 @@ Hold the button under your thumb, press 2, and the game does whatever you have o
 - Works in combat.
 - Uses your existing Shift, Ctrl and Alt keybinds. Nothing to rebind.
 - Works with the default action bars and with action bar addons such as ElvUI.
-- No changes to your interface. One small window, opened only when you need it.
+- No changes to your interface. One small window, opened only when you need it, and a minimap button you can hide.
 - No external key remapping software needed.
 
 [B]HOW TO USE[/B]
 
-1. Type /mouseshift, or open it from the addons button next to the minimap.
+1. Type /mouseshift, or click the MouseShift minimap button.
 2. Click the Shift field, then press the mouse button or key you want to use as Shift. The cursor can be anywhere.
 3. Do the same for Ctrl and Alt if you want them.
 4. Close the window. Done.
@@ -47,6 +47,7 @@ The side buttons of these mice usually send keyboard keys (1, 2, 3... or the num
 
 /mouseshift - open the settings window
 /mouseshift list - show which keys each layer uses
+/mouseshift minimap - show or hide the minimap button
 /mouseshift reset - clear all mouse buttons and keys
 
 Full documentation: [URL="https://github.com/mikebronka/MouseShift"]https://github.com/mikebronka/MouseShift[/URL]

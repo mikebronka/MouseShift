@@ -2,6 +2,12 @@
 
 Version numbers: fixes raise the last number (0.1.1), feature releases raise the middle number (0.2.0), and 1.0.0 will be the first stable release.
 
+## 0.3.0
+
+- New minimap button: click it to open the settings window. Drag it to move it around the minimap.
+- Show or hide it with the new **Show minimap button** checkbox in the settings window, or with `/mouseshift minimap`.
+- When another addon has loaded the LibDBIcon library, the button is made with it, so interfaces that gather minimap buttons into a bar (ElvUI, EllesmereUI and others) include MouseShift too. MouseShift itself still ships without libraries.
+
 ## 0.2.1
 
 - MouseShift now shows in the addons list next to the minimap in WoW Forever too, not only in Retail. Click it to open the settings.
