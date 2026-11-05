@@ -53,6 +53,6 @@ The side buttons of these mice usually send keyboard keys (1, 2, 3... or the num
 
 Full documentation: [URL="https://github.com/mikebronka/MouseShift"]https://github.com/mikebronka/MouseShift[/URL]
 Found a problem? Report it on GitHub: [URL="https://github.com/mikebronka/MouseShift/issues"]https://github.com/mikebronka/MouseShift/issues[/URL]
-Questions and feedback on Discord: [URL="https://discord.gg/cbmqVcNq7"]https://discord.gg/cbmqVcNq7[/URL]
+Questions and feedback on Discord: [URL="https://discord.gg/hmWdSxngaS"]https://discord.gg/hmWdSxngaS[/URL]
 
 Made by Mike Bronka - [URL="https://www.mikebronka.com"]https://www.mikebronka.com[/URL]

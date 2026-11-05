@@ -69,6 +69,6 @@ Full documentation: [GitHub](https://github.com/mikebronka/MouseShift)
 
 Found a problem? Report it on [GitHub](https://github.com/mikebronka/MouseShift/issues).
 
-Questions and feedback: [Discord](https://discord.gg/cbmqVcNq7)
+Questions and feedback: [Discord](https://discord.gg/hmWdSxngaS)
 
 Made by [Mike Bronka](https://www.mikebronka.com).

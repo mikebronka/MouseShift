@@ -53,4 +53,4 @@ Type `/mouseshift reset`, or click **Clear** on every field. To remove the addon
 
 ## Still stuck?
 
-Open an [issue on GitHub](https://github.com/mikebronka/MouseShift/issues/new/choose) with the output of `/mouseshift list` and any Lua error, or ask on [Discord](https://discord.gg/cbmqVcNq7).
+Open an [issue on GitHub](https://github.com/mikebronka/MouseShift/issues/new/choose) with the output of `/mouseshift list` and any Lua error, or ask on [Discord](https://discord.gg/hmWdSxngaS).

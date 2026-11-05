@@ -115,7 +115,7 @@ MouseShift takes over that button while it is assigned. The configuration window
 
 Open an [issue](https://github.com/mikebronka/MouseShift/issues/new/choose). Please include the output of `/mouseshift` and any Lua errors.
 
-Questions and feedback are welcome on [Discord](https://discord.gg/cbmqVcNq7).
+Questions and feedback are welcome on [Discord](https://discord.gg/hmWdSxngaS).
 
 ## License
 
