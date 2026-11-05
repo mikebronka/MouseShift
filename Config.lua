@@ -34,6 +34,7 @@ local L = {
     PENDING = "Changes will be applied when combat ends.",
     OPEN = "Open MouseShift",
     PANEL_TEXT = "Use mouse buttons or other keys as Shift, Ctrl and Alt.",
+    COMPARTMENT_HINT = "Click to open the settings.",
 }
 
 local MODIFIER_LABELS = {
@@ -411,9 +412,50 @@ function ns.OpenConfig()
     frame:Show()
 end
 
--- Entry in the addon compartment (the addons button next to the minimap).
-function MouseShift_OnAddonCompartmentClick()
-    ns.ToggleConfig()
+---------------------------------------------------------------------------
+-- Entry in the addon compartment (the addons button next to the minimap)
+---------------------------------------------------------------------------
+
+-- Registered from code rather than through the TOC file: WoW Forever lists a
+-- TOC entry internally but does not show it in the menu, while an entry
+-- registered here shows in both Retail and Forever.
+local function RegisterCompartmentEntry()
+    local compartment = AddonCompartmentFrame
+    if not (compartment and compartment.RegisterAddon) then
+        return
+    end
+
+    -- Never add a second entry, for example if this runs twice.
+    if type(compartment.registeredAddons) == "table" then
+        for _, entry in ipairs(compartment.registeredAddons) do
+            if type(entry) == "table" and entry.text == L.TITLE and entry.func then
+                return
+            end
+        end
+    end
+
+    compartment:RegisterAddon({
+        text = L.TITLE,
+        icon = "Interface\\AddOns\\MouseShift\\Media\\icon",
+        notCheckable = true,
+        registerForAnyClick = true,
+        func = function()
+            ns.ToggleConfig()
+        end,
+        funcOnEnter = function(owner)
+            if type(owner) == "table" and owner.IsObjectType and GameTooltip then
+                GameTooltip:SetOwner(owner, "ANCHOR_LEFT")
+                GameTooltip:SetText(L.TITLE)
+                GameTooltip:AddLine(L.COMPARTMENT_HINT, 1, 1, 1)
+                GameTooltip:Show()
+            end
+        end,
+        funcOnLeave = function()
+            if GameTooltip then
+                GameTooltip:Hide()
+            end
+        end,
+    })
 end
 
 ---------------------------------------------------------------------------
@@ -454,4 +496,5 @@ local loader = CreateFrame("Frame")
 loader:RegisterEvent("PLAYER_LOGIN")
 loader:SetScript("OnEvent", function()
     RegisterSettingsPanel()
+    RegisterCompartmentEntry()
 end)

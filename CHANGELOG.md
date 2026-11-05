@@ -2,6 +2,11 @@
 
 Version numbers: fixes raise the last number (0.1.1), feature releases raise the middle number (0.2.0), and 1.0.0 will be the first stable release.
 
+## 0.2.1
+
+- MouseShift now shows in the addons list next to the minimap in WoW Forever too, not only in Retail. Click it to open the settings.
+- The entry shows a short tooltip when you point at it.
+
 ## 0.2.0
 
 - Any key can now be a modifier, not only a mouse button. This makes MMO mice whose side buttons send keyboard keys (such as the Razer Naga) work with MouseShift.
