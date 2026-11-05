@@ -38,6 +38,8 @@ To assign a modifier:
 
 Repeat for **Ctrl** and **Alt** if you want them. Left-click or Escape cancels. **Clear** removes an assignment and the button gets its old keybind back.
 
+**Show minimap button** below the fields shows or hides the MouseShift button on the minimap. Click that button to open this window, drag it to move it around the minimap. If your interface gathers minimap buttons into a bar (ElvUI, EllesmereUI and others), you find MouseShift there.
+
 Next to each field you can see how many of your keybinds that layer reaches, for example *24 bindings* for Shift.
 
 ## 3. Play

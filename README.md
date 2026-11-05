@@ -23,6 +23,7 @@ Hold the button under your thumb, press `2`, and the game does whatever you have
 - Works in combat.
 - Uses your existing SHIFT, CTRL and ALT bindings. Nothing to rebind.
 - Works with the default action bars and with action bar addons.
+- Open the settings from a minimap button. Interface addons that gather minimap buttons into a bar, such as ElvUI or EllesmereUI, pick it up too.
 - No changes to your interface. One small window, opened only when you need it, and a minimap button you can hide.
 - Retail and WoW Forever.
 
