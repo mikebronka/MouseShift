@@ -58,8 +58,19 @@ These limits come from the game, not from MouseShift:
 - **Action bar paging on a modifier.** Bars that switch pages while Shift is held check the real Shift key too.
 - **Keyboard keys and Alt-Tab.** The game cannot tell whether a keyboard key is still held, only whether a mouse button is. A keyboard key released while the game is not focused can leave its layer on until you press it again or a loading screen comes.
 
+## The minimap button
+
+MouseShift ships without libraries. Most addons with a minimap button use a shared library for it, LibDBIcon, and interface packs such as ElvUI or EllesmereUI use the same library to gather those buttons into one bar.
+
+- If another addon has already loaded LibDBIcon, MouseShift makes its button with it, so it behaves like every other minimap button and joins those bars.
+- If not, MouseShift makes a simple button of its own on the edge of the minimap.
+
+Either way, the button opens the settings window, can be dragged around the minimap and can be hidden with **Show minimap button** in the settings window or with `/mouseshift minimap`. Its position and visibility are saved.
+
+MouseShift also adds itself to the game's own list of addons behind the addons button next to the minimap, in Retail and in WoW Forever.
+
 ## The code
 
-MouseShift is open source under the MIT license. The core is in [`Core.lua`](../Core.lua), the settings window in [`Config.lua`](../Config.lua).
+MouseShift is open source under the MIT license. The core is in [`Core.lua`](../Core.lua), the settings window in [`Config.lua`](../Config.lua) and the minimap button in [`Minimap.lua`](../Minimap.lua).
 
 Next: [Troubleshooting](troubleshooting.md)

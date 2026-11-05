@@ -8,11 +8,11 @@ MouseShift is not meant to compete with any addon. It does one small thing, a mo
 - **Raid frames and click-casting** (Grid2, VuhDo, Cell, Clique, the game's click bindings): your clicks stay with your click-casting addon. MouseShift adds layers to the keys you use on mouseover.
 - **Keybinding addons** (BindPad, SpellBinding and others): every Shift, Ctrl or Alt keybind they create becomes reachable with the thumb as well.
 - **Macros:** mouseover macros and all other macros work unchanged on every layer.
-- **Interface packs:** MouseShift has no frames of its own except a small settings window that follows your interface's fonts and style.
+- **Interface packs and minimap button bars** (ElvUI, EllesmereUI and others): the small settings window follows your interface's fonts and style, and the MouseShift minimap button joins the bar where your interface gathers minimap buttons. You can hide the button with one click.
 
 ## Why it fits next to almost anything
 
-- It creates no action bars, frames, macros or keybinds of its own.
+- It creates no action bars, macros or keybinds of its own. Its only visible parts are a small settings window and a minimap button you can hide.
 - It never changes or saves your keybinds. It reads them and adds temporary layers on top, which disappear when MouseShift is disabled.
 - When another addon changes your keybinds, MouseShift notices and updates its layers by itself.
 

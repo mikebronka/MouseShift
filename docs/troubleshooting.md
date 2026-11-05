@@ -41,6 +41,12 @@ See [MMO mice](mmo-mice.md), including the Shift and numpad trap in Windows.
 
 That is how the game works: the left button turns the camera, the right button turns the character. If a right click moves your character to where you clicked, the game's **Click-to-Move** option is on (Options › Controls). MouseShift never changes game options, and it can never take over the left or right mouse button.
 
+## I cannot find the minimap button
+
+- It may be hidden. Open the settings with `/mouseshift` and tick **Show minimap button**, or type `/mouseshift minimap`.
+- Your interface may gather minimap buttons into a bar or a menu (ElvUI, EllesmereUI and others). Look for MouseShift there.
+- The settings are also in the game's list of addons behind the addons button next to the minimap, and in Options › AddOns › MouseShift.
+
 ## How do I remove everything?
 
 Type `/mouseshift reset`, or click **Clear** on every field. To remove the addon completely, disable or delete it. Your keybinds were never changed, so nothing else needs undoing.
