@@ -2,6 +2,11 @@
 
 Version numbers: fixes raise the last number (0.1.1), feature releases raise the middle number (0.2.0), and 1.0.0 will be the first stable release.
 
+## 0.3.1
+
+- Fixed: with the cursor over a unit frame (your own, party, raid or target frame), holding the assigned mouse button gave the plain keybind instead of the Shift, Ctrl or Alt one. The game's unit frames take mouse buttons 4 and 5 for themselves; MouseShift now tells them to let the assigned mouse buttons pass through, so mouseover casting on frames works.
+- This works for the middle button and mouse buttons 4 and 5, with the game's own frames and with unit frame addons. The game allows it only out of combat, so frames created during a fight are updated when it ends.
+
 ## 0.3.0
 
 - New minimap button: click it to open the settings window. Drag it to move it around the minimap.

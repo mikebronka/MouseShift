@@ -482,6 +482,10 @@ function ns.Apply()
     BindTriggers()
     ns.layers = layers
 
+    if ns.UpdatePassThrough then
+        ns.UpdatePassThrough()
+    end
+
     if ns.OnApplied then
         ns.OnApplied()
     end
@@ -509,6 +513,8 @@ local function KeyToMouseButton(key)
     end
     return nil
 end
+
+ns.KeyToMouseButton = KeyToMouseButton
 
 local CHECK_INTERVAL = 0.5
 -- A button must be seen as released this many times in a row, so a single

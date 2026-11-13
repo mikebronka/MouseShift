@@ -58,6 +58,12 @@ These limits come from the game, not from MouseShift:
 - **Action bar paging on a modifier.** Bars that switch pages while Shift is held check the real Shift key too.
 - **Keyboard keys and Alt-Tab.** The game cannot tell whether a keyboard key is still held, only whether a mouse button is. A keyboard key released while the game is not focused can leave its layer on until you press it again or a loading screen comes.
 
+## Unit frames
+
+Unit frames, the player, party, raid and target frames from the game or from addons, take every mouse button pressed over them, including mouse buttons 4 and 5. A modifier on such a button would then never arrive while the cursor is over a frame, which breaks mouseover casting on frames.
+
+The game lets a frame pass chosen mouse buttons on to what lies below it. Out of combat, MouseShift does that on every unit frame for the mouse buttons assigned as modifiers, and only for those. It repeats this after login, after loading screens, when the group changes and when combat ends, so new frames are covered too. When no mouse button is assigned any more, the frames get their clicks back. This works for the middle button and mouse buttons 4 and 5.
+
 ## The minimap button
 
 MouseShift ships without libraries. Most addons with a minimap button use a shared library for it, LibDBIcon, and interface packs such as ElvUI or EllesmereUI use the same library to gather those buttons into one bar.
@@ -71,6 +77,6 @@ MouseShift also adds itself to the game's own list of addons behind the addons b
 
 ## The code
 
-MouseShift is open source under the MIT license. The core is in [`Core.lua`](../Core.lua), the settings window in [`Config.lua`](../Config.lua) and the minimap button in [`Minimap.lua`](../Minimap.lua).
+MouseShift is open source under the MIT license. The core is in [`Core.lua`](../Core.lua), the settings window in [`Config.lua`](../Config.lua), the minimap button in [`Minimap.lua`](../Minimap.lua) and the unit frame handling in [`UnitFrames.lua`](../UnitFrames.lua).
 
 Next: [Troubleshooting](troubleshooting.md)

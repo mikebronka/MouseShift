@@ -8,6 +8,13 @@
 - Check that you have keybinds on that layer. The number next to the field, for example *24 bindings*, shows how many. `/mouseshift list` shows every key.
 - Keybinds with Shift are needed for the Shift layer. If you have none, set them in the game's key bindings menu: hold the real Shift and press the key.
 
+## Over a unit frame I get the plain keybind
+
+Unit frames (your own, party, raid and target frames) take mouse buttons 4 and 5 for themselves, so the button never reached MouseShift while the cursor was over a frame. Since version 0.3.1 MouseShift lets the assigned mouse buttons pass through unit frames. Update to the latest version.
+
+- This works for the middle button and mouse buttons 4 and 5. The game cannot pass higher mouse buttons through frames; use one of these three, or a keyboard key, as the modifier.
+- The game allows this only out of combat. Frames created during a fight, for example when someone joins the group, are updated as soon as combat ends.
+
 ## A macro with [mod:shift] does not react
 
 Macro conditions check the real Shift key, which MouseShift does not press. Move the alternative to its own Shift keybind. See [How it works](how-it-works.md#what-is-not-possible).

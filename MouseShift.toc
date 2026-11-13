@@ -16,3 +16,4 @@
 Core.lua
 Config.lua
 Minimap.lua
+UnitFrames.lua
