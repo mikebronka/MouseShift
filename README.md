@@ -6,7 +6,7 @@ Bind Shift, Ctrl and Alt to your mouse buttons in World of Warcraft.
 
 &nbsp;&nbsp;
 
-[CurseForge](https://www.curseforge.com/wow/addons/mouseshift) · [Wago](https://addons.wago.io/addons/mouseshift) · [WoWInterface](https://www.wowinterface.com/downloads/info27280-MouseShift.html) · [Discord](https://discord.gg/qwGMzWpDj5) · [Releases](https://github.com/mikebronka/MouseShift/releases)<br clear="left">
+[CurseForge](https://www.curseforge.com/wow/addons/mouseshift) · [Wago](https://addons.wago.io/addons/mouseshift) · [WoWInterface](https://www.wowinterface.com/downloads/info27280-MouseShift.html) · [Discord](https://discord.gg/hmWdSxngaS) · [Releases](https://github.com/mikebronka/MouseShift/releases)<br clear="left">
 
 > **Early version.** MouseShift is new. If something does not work, please [open an issue](https://github.com/mikebronka/MouseShift/issues/new/choose).
 
@@ -21,6 +21,7 @@ Hold the button under your thumb, press `2`, and the game does whatever you have
 - Assign a button by pressing it. No need to know whether your thumb button is Button 4 or Button 5.
 - Works with MMO mice whose side buttons send keyboard keys, such as the Razer Naga: any key can be a modifier too.
 - Works in combat.
+- Works with mouseover casting on your own, party and raid frames, from the game or from unit frame addons.
 - Uses your existing SHIFT, CTRL and ALT bindings. Nothing to rebind.
 - Works with the default action bars and with action bar addons.
 - Open the settings from a minimap button. Interface addons that gather minimap buttons into a bar, such as ElvUI or EllesmereUI, pick it up too.
@@ -96,6 +97,7 @@ The side buttons of these mice usually send keyboard keys (1, 2, 3… or the num
 
 - **Macro conditions.** The game does not see a real SHIFT key, so macros using `[mod:shift]`, `[mod:ctrl]` or `[mod:alt]` will not react to the mouse button. The same applies to action bar paging on a modifier key.
 - **Clicks are not changed.** MouseShift works on key bindings, so Shift-click in the interface (linking an item in chat, Shift-click casting on raid frames with Clique or the game's click bindings) still needs the real Shift key.
+- **Mouse buttons 6 and higher over unit frames.** Unit frames keep mouse buttons for themselves. MouseShift lets the middle button and mouse buttons 4 and 5 through, but the game cannot do that for higher buttons. For mouseover casting on frames, use one of these three or a keyboard key as the modifier.
 - **Movement keys are not mirrored.** Releasing the mouse button before a movement key would leave your character running.
 - **Alt-Tab while holding a keyboard key.** If you release a key used as a modifier while the game window is not focused, its layer can stay on. Press the key once to fix it. Mouse buttons are checked automatically.
 - **Settings cannot be changed in combat.** The game blocks binding changes from addons during combat. Using MouseShift in combat works normally.
@@ -113,7 +115,7 @@ MouseShift takes over that button while it is assigned. The configuration window
 
 ## Reporting problems
 
-Open an [issue](https://github.com/mikebronka/MouseShift/issues/new/choose). Please include the output of `/mouseshift` and any Lua errors.
+Open an [issue](https://github.com/mikebronka/MouseShift/issues/new/choose). Please include the output of `/mouseshift list` and any Lua errors.
 
 Questions and feedback are welcome on [Discord](https://discord.gg/hmWdSxngaS).
 

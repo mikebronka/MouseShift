@@ -5,7 +5,7 @@ MouseShift is not meant to compete with any addon. It does one small thing, a mo
 ## How it fits
 
 - **Action bars** (the default bars, Bartender, Dominos, ElvUI and others): set Shift, Ctrl and Alt keybinds on your bars as usual. MouseShift puts them under your thumb. No bar settings to change.
-- **Raid frames and click-casting** (Grid2, VuhDo, Cell, Clique, the game's click bindings): your clicks stay with your click-casting addon. MouseShift adds layers to the keys you use on mouseover.
+- **Raid frames and click-casting** (Grid2, VuhDo, Cell, Clique, the game's click bindings): your clicks stay with your click-casting addon. MouseShift adds layers to the keys you use on mouseover, on the game's frames and on the frames of any unit frame addon.
 - **Keybinding addons** (BindPad, SpellBinding and others): every Shift, Ctrl or Alt keybind they create becomes reachable with the thumb as well.
 - **Macros:** mouseover macros and all other macros work unchanged on every layer.
 - **Interface packs and minimap button bars** (ElvUI, EllesmereUI and others): the small settings window follows your interface's fonts and style, and the MouseShift minimap button joins the bar where your interface gathers minimap buttons. You can hide the button with one click.

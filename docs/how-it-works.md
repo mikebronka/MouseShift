@@ -49,20 +49,21 @@ Each modifier has a number: Shift is 1, Ctrl is 2, Alt is 4. While buttons are h
 - **Nothing by accident.** A field must be clicked before it accepts a button or key, and while it waits, what you press does not reach the game.
 - **No stuck layers.** If you release a mouse button while the game window is not focused (Alt-Tab), the game never sees the release. Out of combat MouseShift checks the real state of the button twice a second and switches the layer off when the button is no longer held. It only trusts a button the game has reported as held before, so a mouse the game does not read correctly can never switch your layer off while you hold it. After a loading screen every layer is switched off.
 
+## Unit frames
+
+Unit frames, the player, party, raid and target frames from the game or from addons, take every mouse button pressed over them, including mouse buttons 4 and 5. A modifier on such a button would then never arrive while the cursor is over a frame, which breaks mouseover casting on frames.
+
+The game lets a frame pass chosen mouse buttons on to what lies below it. Out of combat, MouseShift does that on every unit frame for the mouse buttons assigned as modifiers, and only for those. It repeats this after login, after loading screens, when the group changes and when combat ends, so new frames are covered too. When no mouse button is assigned any more, the frames get their clicks back. This works for the middle button and mouse buttons 4 and 5.
+
 ## What is not possible
 
 These limits come from the game, not from MouseShift:
 
 - **Macro conditions.** `[mod:shift]` in a macro checks the real Shift key. MouseShift does not press it, so these conditions do not react. Put the alternative on a Shift keybind instead of inside one macro.
 - **Clicks.** Override keybinds work on keys, not on clicks in the interface. Shift-click to link an item, Shift-click casting on raid frames (Clique, Grid2, VuhDo and the game's click bindings) and similar still need the real Shift key.
+- **Mouse buttons 6 and higher over unit frames.** The game can pass only the middle button and mouse buttons 4 and 5 through a unit frame. A higher mouse button as a modifier works everywhere else, but not with the cursor over a frame.
 - **Action bar paging on a modifier.** Bars that switch pages while Shift is held check the real Shift key too.
 - **Keyboard keys and Alt-Tab.** The game cannot tell whether a keyboard key is still held, only whether a mouse button is. A keyboard key released while the game is not focused can leave its layer on until you press it again or a loading screen comes.
-
-## Unit frames
-
-Unit frames, the player, party, raid and target frames from the game or from addons, take every mouse button pressed over them, including mouse buttons 4 and 5. A modifier on such a button would then never arrive while the cursor is over a frame, which breaks mouseover casting on frames.
-
-The game lets a frame pass chosen mouse buttons on to what lies below it. Out of combat, MouseShift does that on every unit frame for the mouse buttons assigned as modifiers, and only for those. It repeats this after login, after loading screens, when the group changes and when combat ends, so new frames are covered too. When no mouse button is assigned any more, the frames get their clicks back. This works for the middle button and mouse buttons 4 and 5.
 
 ## The minimap button
 

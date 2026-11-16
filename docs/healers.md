@@ -14,6 +14,8 @@ This works with MouseShift exactly as it works with the real Shift key:
 2. Hold the thumb button and press 2.
 3. The spell on Shift-2 lands on the player under the cursor.
 
+This works on the game's own frames and on the frames of unit frame addons such as ElvUI, Cell, Grid2 or VuhDo. Unit frames normally keep mouse buttons for themselves; MouseShift lets the assigned mouse button through them. The game allows that for the middle button and mouse buttons 4 and 5, so use one of those, or a keyboard key, as the modifier. See [How it works](how-it-works.md#unit-frames).
+
 Your mouseover macros do not need any change. A typical one looks like this:
 
 ```

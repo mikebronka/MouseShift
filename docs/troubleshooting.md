@@ -13,6 +13,7 @@
 Unit frames (your own, party, raid and target frames) take mouse buttons 4 and 5 for themselves, so the button never reached MouseShift while the cursor was over a frame. Since version 0.3.1 MouseShift lets the assigned mouse buttons pass through unit frames. Update to the latest version.
 
 - This works for the middle button and mouse buttons 4 and 5. The game cannot pass higher mouse buttons through frames; use one of these three, or a keyboard key, as the modifier.
+- Keyboard keys used as modifiers were never affected.
 - The game allows this only out of combat. Frames created during a fight, for example when someone joins the group, are updated as soon as combat ends.
 
 ## A macro with [mod:shift] does not react

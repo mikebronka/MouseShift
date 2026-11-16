@@ -30,7 +30,9 @@ You can also keep all side buttons for spells and put the modifier on a button y
 - the **middle button** (wheel click), pressed with the index or middle finger
 - a **top button** of the mouse, if it sends a mouse button
 
-Hold it and press a side button for its Shift keybind. With three modifiers on three such buttons, a 12-button grid gives 48 keybinds without touching the keyboard.
+Hold it and press a side button for its Shift keybind. For mouseover casting on party and raid frames, prefer the middle button or mouse buttons 4 and 5: the game lets only those through unit frames, not higher buttons. Side buttons that send keyboard keys are not affected.
+
+With three modifiers on three such buttons, a 12-button grid gives 48 keybinds without touching the keyboard.
 
 ## Shift and the numpad
 
