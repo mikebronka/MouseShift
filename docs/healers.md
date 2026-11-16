@@ -11,8 +11,8 @@ The most common way to heal with keys is mouseover: point the cursor at a player
 This works with MouseShift exactly as it works with the real Shift key:
 
 1. Point the cursor at a raid frame.
-2. Hold the thumb button and press 2.
-3. The spell on Shift-2 lands on the player under the cursor.
+2. Hold the thumb button and press `2`.
+3. The spell on `Shift-2` lands on the player under the cursor.
 
 This works on the game's own frames and on the frames of unit frame addons such as ElvUI, Cell, Grid2 or VuhDo. Unit frames normally keep mouse buttons for themselves; MouseShift lets the assigned mouse button through them. The game allows that for the middle button and mouse buttons 4 and 5, so use one of those, or a keyboard key, as the modifier. See [How it works](how-it-works.md#unit-frames).
 
@@ -23,7 +23,7 @@ Your mouseover macros do not need any change. A typical one looks like this:
 /cast [@mouseover,help,nodead][] Flash Heal
 ```
 
-Put it on 2 and another macro on Shift-2, and the thumb button switches between them.
+Put it on `2` and another macro on `Shift-2`, and the thumb button switches between them.
 
 ## Together with click-casting
 
@@ -38,18 +38,18 @@ The modified clicks themselves (Shift-click and so on) still use the real Shift 
 
 ## An example layout
 
-With the thumb button as Shift and the next side button as Ctrl, and these keys under the left hand: 1, 2, 3, 4, Q, E, R, F.
+With the thumb button as Shift and the next side button as Ctrl, and these keys under the left hand: `1`, `2`, `3`, `4`, `Q`, `E`, `R`, `F`.
 
 | Key | Plain | Shift (thumb) | Ctrl (second button) |
 | --- | --- | --- | --- |
-| 1 | Fast heal | Big heal | Group heal |
-| 2 | Heal over time | Shield | Second heal over time |
-| 3 | Dispel | Mass dispel | Purge on enemy |
-| 4 | Damage spell | Second damage spell | Interrupt |
-| Q | Cooldown on target | Personal defensive | Movement ability |
-| E | Group cooldown | Second group cooldown | Battle resurrection |
-| R | Resurrect | Mass resurrect | Mount |
-| F | Trinket | Second trinket | Healthstone |
+| `1` | Fast heal | Big heal | Group heal |
+| `2` | Heal over time | Shield | Second heal over time |
+| `3` | Dispel | Mass dispel | Purge on enemy |
+| `4` | Damage spell | Second damage spell | Interrupt |
+| `Q` | Cooldown on target | Personal defensive | Movement ability |
+| `E` | Group cooldown | Second group cooldown | Battle resurrection |
+| `R` | Resurrect | Mass resurrect | Mount |
+| `F` | Trinket | Second trinket | Healthstone |
 
 24 actions on 8 keys, with the left hand never leaving them. Adapt it to your class: the point is that related spells share a key and the thumb picks the version.
 

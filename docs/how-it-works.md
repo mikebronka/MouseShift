@@ -10,11 +10,11 @@ An addon cannot press the Shift key. What the game does allow is **override keyb
 
 MouseShift uses them to build **layers**:
 
-1. Out of combat, MouseShift reads every keybind you have with Shift: Shift-1, Shift-2, Shift-Q and so on. This list is the Shift layer. The same is done for Ctrl, Alt and their combinations.
-2. When you hold the button assigned to Shift, MouseShift puts each of those actions on the plain key: the action of Shift-1 goes on 1, the action of Shift-2 on 2.
+1. Out of combat, MouseShift reads every keybind you have with Shift: `Shift-1`, `Shift-2`, `Shift-Q` and so on. This list is the Shift layer. The same is done for Ctrl, Alt and their combinations.
+2. When you hold the button assigned to Shift, MouseShift puts each of those actions on the plain key: the action of `Shift-1` goes on `1`, the action of `Shift-2` on `2`.
 3. When you release the button, those temporary keybinds are removed and your normal keys are back.
 
-To the game you pressed 2, but 2 does what Shift-2 does while the button is held.
+To the game you pressed `2`, but `2` does what `Shift-2` does while the button is held.
 
 ## Working in combat
 
@@ -34,13 +34,13 @@ Each modifier has a number: Shift is 1, Ctrl is 2, Alt is 4. While buttons are h
 
 | Held | Number | Layer |
 | --- | --- | --- |
-| Shift | 1 | Shift-key |
-| Ctrl | 2 | Ctrl-key |
-| Shift and Ctrl | 3 | Ctrl-Shift-key |
-| Alt | 4 | Alt-key |
-| Alt and Shift | 5 | Alt-Shift-key |
-| Alt and Ctrl | 6 | Alt-Ctrl-key |
-| all three | 7 | Alt-Ctrl-Shift-key |
+| Shift | 1 | `Shift-key` |
+| Ctrl | 2 | `Ctrl-key` |
+| Shift and Ctrl | 3 | `Ctrl-Shift-key` |
+| Alt | 4 | `Alt-key` |
+| Alt and Shift | 5 | `Alt-Shift-key` |
+| Alt and Ctrl | 6 | `Alt-Ctrl-key` |
+| all three | 7 | `Alt-Ctrl-Shift-key` |
 
 ## Safety rules
 

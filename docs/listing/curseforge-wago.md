@@ -1,6 +1,6 @@
 MouseShift turns the extra buttons on your mouse into **Shift**, **Ctrl** and **Alt**.
 
-Hold the button under your thumb, press **2**, and the game does whatever you have on **Shift-2**. No awkward finger stretches, and twice as many keybinds within easy reach of your left hand.
+Hold the button under your thumb, press `2`, and the game does whatever you have on `Shift-2`. No awkward finger stretches, and twice as many keybinds within easy reach of your left hand.
 
 ![The MouseShift settings window](https://raw.githubusercontent.com/mikebronka/MouseShift/main/docs/images/config-window.png)
 
@@ -10,7 +10,7 @@ Hold the button under your thumb, press **2**, and the game does whatever you ha
 
 - Use any extra mouse button as Shift, Ctrl or Alt. Use one, two or all three.
 - Any keyboard key can be a modifier too. Great for MMO mice whose side buttons send keyboard keys.
-- Hold two buttons together for combinations such as Ctrl-Shift.
+- Hold two buttons together for combinations such as `Ctrl-Shift`.
 - Assign a button by pressing it. No need to know whether your thumb button is Button 4 or Button 5.
 - Works in combat.
 - Works with mouseover casting on your own, party and raid frames, from the game or from unit frame addons.
@@ -24,7 +24,7 @@ Hold the button under your thumb, press **2**, and the game does whatever you ha
 
 ### How to use
 
-1. Type **/mouseshift**, or click the MouseShift minimap button.
+1. Type `/mouseshift`, or click the MouseShift minimap button.
 2. Click the **Shift** field, then press the mouse button or key you want to use as Shift. The cursor can be anywhere.
 3. Do the same for Ctrl and Alt if you want them.
 4. Close the window. Done.
@@ -44,13 +44,13 @@ The side buttons of these mice usually send keyboard keys (1, 2, 3… or the num
 - Click a field and press a side button: it becomes Shift, Ctrl or Alt.
 - Or keep the side buttons for spells, and use the middle button or a top button as Shift. Hold it and press a side button for its Shift keybind.
 
-**Tip:** if your side buttons send the numpad, the real Shift key does not combine well with them. With Num Lock on, Windows turns Shift + Numpad 1 into End, Shift + Numpad 8 into Up and so on. Use Ctrl or Alt with the numpad, or let MouseShift be your Shift: it does not press the real Shift key, so the numpad stays the numpad.
+**Tip:** if your side buttons send the numpad, the real Shift key does not combine well with them. With Num Lock on, Windows turns `Shift` + `Numpad 1` into `End`, `Shift` + `Numpad 8` into `Up` and so on. Use Ctrl or Alt with the numpad, or let MouseShift be your Shift: it does not press the real Shift key, so the numpad stays the numpad.
 
 &nbsp;
 
 ### Good to know
 
-- Macros with **[mod:shift]**, **[mod:ctrl]** or **[mod:alt]** do not react to MouseShift, because the game does not see a real Shift key. The same applies to action bar paging on a modifier, and to Shift-click in the interface (linking items, click-casting on raid frames).
+- Macros with `[mod:shift]`, `[mod:ctrl]` or `[mod:alt]` do not react to MouseShift, because the game does not see a real Shift key. The same applies to action bar paging on a modifier, and to Shift-click in the interface (linking items, click-casting on raid frames).
 - The left and right mouse buttons, Escape, Enter and movement keys can never be assigned, so the game stays playable.
 - A button or key used as a modifier no longer does its own action while assigned. Clear it and the original keybind comes back.
 - Over unit frames, use the middle button, mouse button 4 or 5, or a keyboard key as the modifier. The game does not let higher mouse buttons through frames.
@@ -60,10 +60,10 @@ The side buttons of these mice usually send keyboard keys (1, 2, 3… or the num
 
 ### Commands
 
-- **/mouseshift** opens the settings window
-- **/mouseshift list** shows which keys each layer uses
-- **/mouseshift minimap** shows or hides the minimap button
-- **/mouseshift reset** clears all mouse buttons and keys
+- `/mouseshift` opens the settings window
+- `/mouseshift list` shows which keys each layer uses
+- `/mouseshift minimap` shows or hides the minimap button
+- `/mouseshift reset` clears all mouse buttons and keys
 
 ---
 

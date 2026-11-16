@@ -16,7 +16,7 @@ Unit frames (your own, party, raid and target frames) take mouse buttons 4 and 5
 - Keyboard keys used as modifiers were never affected.
 - The game allows this only out of combat. Frames created during a fight, for example when someone joins the group, are updated as soon as combat ends.
 
-## A macro with [mod:shift] does not react
+## A macro with `[mod:shift]` does not react
 
 Macro conditions check the real Shift key, which MouseShift does not press. Move the alternative to its own Shift keybind. See [How it works](how-it-works.md#what-is-not-possible).
 

@@ -46,7 +46,7 @@ Next to each field you can see how many of your keybinds that layer reaches, for
 
 Hold the assigned button and press a key. The game does what you have on Shift plus that key. Release the button and the key is back to normal.
 
-Hold two assigned buttons together for combined layers: Shift and Ctrl together reach your Ctrl-Shift keybinds.
+Hold two assigned buttons together for combined layers: Shift and Ctrl together reach your `Ctrl-Shift` keybinds.
 
 ## 4. Plan your keybinds
 
@@ -56,9 +56,9 @@ Three ways to organise them that work well:
 
 **One layer per purpose.** Plain keys for your rotation, Shift for cooldowns and defensives, Ctrl for utility and crowd control.
 
-**Mirror by position.** Shift-1 is a stronger or longer version of 1: 1 is your fast heal, Shift-1 your big heal on the same key.
+**Mirror by position.** `Shift-1` is a stronger or longer version of `1`: `1` is your fast heal, `Shift-1` your big heal on the same key.
 
-**Bars as layers.** Put action bar 1 on keys 1 to 6, action bar 2 on Shift-1 to Shift-6, action bar 3 on Ctrl-1 to Ctrl-6. Each bar is one layer of the same keys, which makes the setup easy to remember.
+**Bars as layers.** Put action bar 1 on keys `1` to `6`, action bar 2 on `Shift-1` to `Shift-6`, action bar 3 on `Ctrl-1` to `Ctrl-6`. Each bar is one layer of the same keys, which makes the setup easy to remember.
 
 ## 5. Commands
 

@@ -4,7 +4,7 @@
 
 **MouseShift adds an option missing from World of Warcraft's own key bindings: a modifier on the mouse.**
 
-Hold the button under your thumb, press 2, and the game does what you have on Shift-2. Release it, and 2 is your normal 2. The same works for Ctrl and Alt, for any extra mouse button and for any key you choose.
+Hold the button under your thumb, press `2`, and the game does what you have on `Shift-2`. Release it, and `2` is your normal `2`. The same works for Ctrl and Alt, for any extra mouse button and for any key you choose.
 
 This wiki explains the ideas behind MouseShift: why it exists, what it does, who it is for and how it fits next to your other addons. These pages do not change from version to version.
 

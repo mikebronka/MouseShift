@@ -8,7 +8,7 @@ MMO mice such as the Razer Naga, Logitech G600 and Corsair Scimitar have a grid 
 
 Most of these mice do not send mouse buttons from the side grid. They send **keyboard keys**:
 
-- by default, usually the number row: 1, 2, 3 … 0, - and =
+- by default, usually the number row: `1`, `2`, `3` … `0`, `-` and `=`
 - many players switch them to the numpad in the mouse software, so they do not repeat the keyboard's number row
 
 For the game, pressing side button 1 is the same as pressing a key on the keyboard.
@@ -40,17 +40,17 @@ If your side buttons send the numpad, the **real** Shift key on the keyboard doe
 
 | Numpad key | With Shift becomes |
 | --- | --- |
-| 7, 8, 9 | Home, Up, Page Up |
-| 4, 5, 6 | Left, nothing, Right |
-| 1, 2, 3 | End, Down, Page Down |
-| 0, decimal | Insert, Delete |
+| `7`, `8`, `9` | `Home`, `Up`, `Page Up` |
+| `4`, `5`, `6` | `Left`, nothing, `Right` |
+| `1`, `2`, `3` | `End`, `Down`, `Page Down` |
+| `0`, decimal | `Insert`, `Delete` |
 
-So Shift with side button 1 reaches the game as End, not Shift-Numpad 1. The arrows are also movement keys by default, so Shift with side button 8 can move your character.
+So Shift with side button 1 reaches the game as `End`, not `Shift-Numpad 1`. The arrows are also movement keys by default, so Shift with side button 8 can move your character.
 
 Ways around it:
 
 - **Use Ctrl or Alt with the numpad.** They are not affected.
-- **Let MouseShift be your Shift.** Assign Shift to another key or button, for example Caps Lock, Tab or the middle mouse button. MouseShift does not press the real Shift key, so the numpad stays the numpad and Shift-Numpad 1 keybinds work.
+- **Let MouseShift be your Shift.** Assign Shift to another key or button, for example `Caps Lock`, `Tab` or the middle mouse button. MouseShift does not press the real Shift key, so the numpad stays the numpad and `Shift-Numpad 1` keybinds work.
 - **Switch the side buttons to the number row** in the mouse software, if you do not need the keyboard's number row for something else.
 
 ## Without the mouse software

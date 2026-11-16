@@ -17,7 +17,7 @@ Hold the button under your thumb, press `2`, and the game does whatever you have
 ## Features
 
 - Turn any extra mouse button into SHIFT, CTRL or ALT. Use one, two or all three.
-- Hold two of them together for combinations such as CTRL-SHIFT.
+- Hold two of them together for combinations such as `CTRL-SHIFT`.
 - Assign a button by pressing it. No need to know whether your thumb button is Button 4 or Button 5.
 - Works with MMO mice whose side buttons send keyboard keys, such as the Razer Naga: any key can be a modifier too.
 - Works in combat.
@@ -71,7 +71,7 @@ Search for **MouseShift** in the CurseForge app, the Wago app or WowUp.
 
 The left and right mouse buttons cannot be used, because the game needs them for targeting and the camera. Escape, Enter, movement keys and the real Shift, Ctrl and Alt keys cannot be used either.
 
-Hold two assigned buttons together to reach your CTRL-SHIFT, ALT-SHIFT or ALT-CTRL bindings, or all three for ALT-CTRL-SHIFT.
+Hold two assigned buttons together to reach your `CTRL-SHIFT`, `ALT-SHIFT` or `ALT-CTRL` bindings, or all three for `ALT-CTRL-SHIFT`.
 
 ### Commands
 
@@ -91,7 +91,7 @@ The side buttons of these mice usually send keyboard keys (1, 2, 3… or the num
 - Click a field and press a side button: it becomes Shift, Ctrl or Alt.
 - Or keep the side buttons for spells and use the middle button or a top button as Shift. Hold it and press a side button for its Shift keybind.
 
-**Tip:** if your side buttons send the numpad, the real Shift key does not combine well with them. With Num Lock on, Windows turns Shift + Numpad 1 into End, Shift + Numpad 8 into Up and so on. Use Ctrl or Alt with the numpad, or let MouseShift be your Shift: it does not press the real Shift key, so the numpad stays the numpad.
+**Tip:** if your side buttons send the numpad, the real Shift key does not combine well with them. With Num Lock on, Windows turns `Shift` + `Numpad 1` into `End`, `Shift` + `Numpad 8` into `Up` and so on. Use Ctrl or Alt with the numpad, or let MouseShift be your Shift: it does not press the real Shift key, so the numpad stays the numpad.
 
 ## Limitations
 

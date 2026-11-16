@@ -6,7 +6,7 @@ MouseShift is for anyone who wants more keybinds within easy reach without stret
 
 Healing asks more of the keyboard than any other role: heals, cooldowns, dispels, utility, movement abilities and often some damage, many of them cast on a specific player.
 
-With mouseover healing you point at a raid frame and press a key, and the spell lands on that player without changing your target. MouseShift adds layers to those keys: point at the frame, hold the thumb button, press 2, and the Shift-2 heal goes to that player. Your mouseover macros need no change.
+With mouseover healing you point at a raid frame and press a key, and the spell lands on that player without changing your target. MouseShift adds layers to those keys: point at the frame, hold the thumb button, press `2`, and the `Shift-2` heal goes to that player. Your mouseover macros need no change.
 
 If you heal with click-casting (Clique, Grid2, VuhDo, Cell or the game's click bindings), keep your clicks as they are. MouseShift adds layers to your keys, so clicks and keys together cover more spells than either alone.
 

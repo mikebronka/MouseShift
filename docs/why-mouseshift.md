@@ -12,12 +12,12 @@ Because it fills a gap in the game itself rather than in some other addon, Mouse
 
 ## The problem
 
-In World of Warcraft your left hand does almost everything: it moves the character and presses most of your abilities. The keys it can reach comfortably are few, usually the number row from 1 to 5 or 6, and a handful of letters around W, A, S and D.
+In World of Warcraft your left hand does almost everything: it moves the character and presses most of your abilities. The keys it can reach comfortably are few, usually the number row from `1` to `5` or `6`, and a handful of letters around `W`, `A`, `S` and `D`.
 
-Modifier keys multiply those keys. Shift-2 is a different keybind from 2. But reaching them is the hard part:
+Modifier keys multiply those keys. `Shift-2` is a different keybind from `2`. But reaching them is the hard part:
 
 - Shift, Ctrl and Alt sit under the little finger, the weakest finger of the hand.
-- Shift-5 or Ctrl-6 means stretching the hand while still moving the character.
+- `Shift-5` or `Ctrl-6` means stretching the hand while still moving the character.
 - In a busy fight these stretches cause mistakes and, after long sessions, tired hands.
 
 Players have worked around this for years with mouse software or tools like AutoHotKey that make a mouse button act as Shift. That works, but it means an extra program running next to the game, a setup that differs for every mouse brand, and in some cases software the player would rather not trust.
@@ -26,8 +26,8 @@ Players have worked around this for years with mouse software or tools like Auto
 
 Your thumb rests on the side buttons of your mouse and does nothing most of the time. What if holding one of those buttons made the game behave as if Shift were held?
 
-- Hold the thumb button, press 2, and the game does what you have on Shift-2.
-- Release the button, press 2, and you get your normal 2.
+- Hold the thumb button, press `2`, and the game does what you have on `Shift-2`.
+- Release the button, press `2`, and you get your normal `2`.
 
 The left hand keeps the same comfortable keys. The thumb picks the layer.
 
@@ -44,7 +44,7 @@ MouseShift was built around a few rules:
 
 ## How many keybinds you gain
 
-Say your left hand reaches 12 keys comfortably: 1 to 6, Q, E, R, F, Z and X.
+Say your left hand reaches 12 keys comfortably: `1` to `6`, `Q`, `E`, `R`, `F`, `Z` and `X`.
 
 | Modifiers assigned to the mouse | Layers you can reach | Keybinds within reach |
 | --- | --- | --- |
@@ -52,7 +52,7 @@ Say your left hand reaches 12 keys comfortably: 1 to 6, Q, E, R, F, Z and X.
 | Shift | plain, Shift | 24 (double) |
 | Shift and Ctrl | plain, Shift, Ctrl | 36 (triple) |
 | Shift, Ctrl and Alt | plain, Shift, Ctrl, Alt | 48 (quadruple) |
-| Shift, Ctrl and Alt, holding two buttons together | plus Ctrl-Shift, Alt-Shift, Alt-Ctrl, Alt-Ctrl-Shift | up to 96 |
+| Shift, Ctrl and Alt, holding two buttons together | plus `Ctrl-Shift`, `Alt-Shift`, `Alt-Ctrl`, `Alt-Ctrl-Shift` | up to 96 |
 
 All of them without moving your left hand away from its usual keys. In practice most players use one or two buttons, which already doubles or triples what they can reach.
 

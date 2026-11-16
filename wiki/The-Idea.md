@@ -8,12 +8,12 @@ MouseShift adds exactly that option, and nothing else. It is the setting that sh
 
 ## The problem it solves
 
-In World of Warcraft the left hand does almost everything: it moves the character and presses most abilities. The keys it reaches comfortably are few, usually the number row from 1 to 5 or 6 and a handful of letters around W, A, S and D.
+In World of Warcraft the left hand does almost everything: it moves the character and presses most abilities. The keys it reaches comfortably are few, usually the number row from `1` to `5` or `6` and a handful of letters around `W`, `A`, `S` and `D`.
 
-Modifier keys multiply those keys, because Shift-2 is a different keybind from 2. Reaching them is the hard part:
+Modifier keys multiply those keys, because `Shift-2` is a different keybind from `2`. Reaching them is the hard part:
 
 - Shift, Ctrl and Alt sit under the little finger, the weakest finger of the hand.
-- Shift-5 or Ctrl-6 means stretching the hand while still moving the character.
+- `Shift-5` or `Ctrl-6` means stretching the hand while still moving the character.
 - In a busy fight these stretches cause mistakes, and after long sessions, tired hands.
 
 For years players worked around this with mouse software or tools like AutoHotKey that make a mouse button act as Shift. That works, but it means an extra program next to the game, a different setup for every mouse brand, and sometimes software the player would rather not trust.
