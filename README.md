@@ -86,7 +86,7 @@ Hold two assigned buttons together to reach your `CTRL-SHIFT`, `ALT-SHIFT` or `A
 
 ## MMO mice (Razer Naga, Logitech G600, Corsair Scimitar and similar)
 
-The side buttons of these mice usually send keyboard keys (1, 2, 3… or the numpad), not mouse buttons. MouseShift handles them like any other key:
+The side buttons of these mice usually send keyboard keys (`1`, `2`, `3`… or the numpad), not mouse buttons. MouseShift handles them like any other key:
 
 - Click a field and press a side button: it becomes Shift, Ctrl or Alt.
 - Or keep the side buttons for spells and use the middle button or a top button as Shift. Hold it and press a side button for its Shift keybind.
