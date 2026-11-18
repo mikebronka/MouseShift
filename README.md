@@ -95,7 +95,7 @@ The side buttons of these mice usually send keyboard keys (`1`, `2`, `3`… or t
 
 ## Limitations
 
-- **Macro conditions.** The game does not see a real SHIFT key, so macros using `[mod:shift]`, `[mod:ctrl]` or `[mod:alt]` will not react to the mouse button. The same applies to action bar paging on a modifier key.
+- **Macro conditions.** The game does not see a real SHIFT key, so macros using `[mod:shift]`, `[mod:ctrl]` or `[mod:alt]` will not react to the mouse button. The same applies to action bar paging on a modifier key, and to setting keybinds in Quick Keybind Mode: hold the real modifier there.
 - **Clicks are not changed.** MouseShift works on key bindings, so Shift-click in the interface (linking an item in chat, Shift-click casting on raid frames with Clique or the game's click bindings) still needs the real Shift key.
 - **Mouse buttons 6 and higher over unit frames.** Unit frames keep mouse buttons for themselves. MouseShift lets the middle button and mouse buttons 4 and 5 through, but the game cannot do that for higher buttons. For mouseover casting on frames, use one of these three or a keyboard key as the modifier.
 - **Movement keys are not mirrored.** Releasing the mouse button before a movement key would leave your character running.

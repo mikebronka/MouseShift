@@ -50,7 +50,7 @@ Hold two assigned buttons together for combined layers: Shift and Ctrl together 
 
 ## 4. Plan your keybinds
 
-MouseShift uses the Shift, Ctrl and Alt keybinds you already have. If you have none yet, set them as usual in the game's key bindings menu or with your action bar addon: hold the real Shift and press the key.
+MouseShift uses the Shift, Ctrl and Alt keybinds you already have. If you have none yet, set them as usual in the game's key bindings menu or with your action bar addon: hold the real Shift and press the key. This includes Quick Keybind Mode: the game reads the real Shift, Ctrl and Alt keys when it saves a keybind, so the MouseShift button does not count there.
 
 Three ways to organise them that work well:
 

@@ -16,6 +16,10 @@ Unit frames (your own, party, raid and target frames) take mouse buttons 4 and 5
 - Keyboard keys used as modifiers were never affected.
 - The game allows this only out of combat. Frames created during a fight, for example when someone joins the group, are updated as soon as combat ends.
 
+## Quick Keybind Mode saves the plain key
+
+When you set keybinds in Quick Keybind Mode (or the key bindings menu), the game reads the real Shift, Ctrl and Alt keys. Holding the MouseShift button there gives the plain key. Hold the real modifier on the keyboard while you set the keybind. After that, the MouseShift button reaches it as usual.
+
 ## A macro with `[mod:shift]` does not react
 
 Macro conditions check the real Shift key, which MouseShift does not press. Move the alternative to its own Shift keybind. See [How it works](how-it-works.md#what-is-not-possible).

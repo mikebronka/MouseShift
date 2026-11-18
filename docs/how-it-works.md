@@ -62,6 +62,7 @@ These limits come from the game, not from MouseShift:
 - **Macro conditions.** `[mod:shift]` in a macro checks the real Shift key. MouseShift does not press it, so these conditions do not react. Put the alternative on a Shift keybind instead of inside one macro.
 - **Clicks.** Override keybinds work on keys, not on clicks in the interface. Shift-click to link an item, Shift-click casting on raid frames (Clique, Grid2, VuhDo and the game's click bindings) and similar still need the real Shift key.
 - **Mouse buttons 6 and higher over unit frames.** The game can pass only the middle button and mouse buttons 4 and 5 through a unit frame. A higher mouse button as a modifier works everywhere else, but not with the cursor over a frame.
+- **Setting keybinds.** Quick Keybind Mode and the key bindings menu read the real Shift, Ctrl and Alt keys, so a keybind with a modifier is set with the real key on the keyboard. Once set, the MouseShift button reaches it.
 - **Action bar paging on a modifier.** Bars that switch pages while Shift is held check the real Shift key too.
 - **Keyboard keys and Alt-Tab.** The game cannot tell whether a keyboard key is still held, only whether a mouse button is. A keyboard key released while the game is not focused can leave its layer on until you press it again or a loading screen comes.
 
