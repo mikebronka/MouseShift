@@ -2,6 +2,11 @@
 
 Version numbers: fixes raise the last number (0.1.1), feature releases raise the middle number (0.2.0), and 1.0.0 will be the first stable release.
 
+## 0.3.2
+
+- Fixed: pressing the assigned button while walking could leave the character walking after the movement key was released. This happened when a movement key, such as `W`, also had a Shift, Ctrl or Alt keybind (for example `Ctrl-W`): the layer took the key over while it was held, so the game never saw it released for movement.
+- Keys that move your character (forward, back, strafe, turn, jump and so on) now keep moving it on every layer. Their Shift, Ctrl and Alt keybinds are still reached with the real modifier keys.
+
 ## 0.3.1
 
 - Fixed: with the cursor over a unit frame (your own, party, raid or target frame), holding the assigned mouse button gave the plain keybind instead of the Shift, Ctrl or Alt one. The game's unit frames take mouse buttons 4 and 5 for themselves; MouseShift now tells them to let the assigned mouse buttons pass through, so mouseover casting on frames works.

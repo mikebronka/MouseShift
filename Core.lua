@@ -26,9 +26,14 @@ local MODIFIER_BIT = { SHIFT = 1, CTRL = 2, ALT = 4 }
 -- The game writes modifiers in this order: ALT-CTRL-SHIFT-key.
 local PREFIX_ORDER = { "ALT", "CTRL", "SHIFT" }
 
--- Actions that start on key press and stop on key release are never mirrored.
--- If the trigger were released before the key, the release event would reach
--- a different binding and the character would keep moving.
+-- Actions that start on key press and stop on key release. A key's release
+-- goes to whatever the key is bound to at that moment, so a layer must never
+-- change the binding of a key while such an action may be running:
+-- - these actions are never put on a key by a layer, or releasing the trigger
+--   before the key would leave the character moving;
+-- - keys bound to these actions are never taken over by a layer, or pressing
+--   the trigger while walking would send the key's release to the layer's
+--   action and the character would keep walking.
 local EXCLUDED_ACTIONS = {
     MOVEFORWARD = true,
     MOVEBACKWARD = true,
@@ -337,6 +342,10 @@ local function CollectLayer(mask, triggerKeys)
         end
         local base = combo:sub(#prefix + 1)
         if base == "" or found[base] or EXCLUDED_KEYS[base] or IsMainMouseButton(base) or triggerKeys[base] or HasModifier(base) then
+            return
+        end
+        -- A key that moves the character keeps moving it on every layer.
+        if EXCLUDED_ACTIONS[GetBindingAction(base, true) or ""] then
             return
         end
         local action = GetBindingAction(combo, true)

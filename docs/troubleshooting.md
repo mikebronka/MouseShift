@@ -16,6 +16,10 @@ Unit frames (your own, party, raid and target frames) take mouse buttons 4 and 5
 - Keyboard keys used as modifiers were never affected.
 - The game allows this only out of combat. Frames created during a fight, for example when someone joins the group, are updated as soon as combat ends.
 
+## My character keeps walking after I release W
+
+Fixed in version 0.3.2. It happened when a movement key also had a Shift, Ctrl or Alt keybind, such as `Ctrl-W`, and you pressed the MouseShift button while walking. Update to the latest version. Movement keys now always move your character, and their modifier keybinds are reached with the real modifier key.
+
 ## Quick Keybind Mode saves the plain key
 
 When you set keybinds in Quick Keybind Mode (or the key bindings menu), the game reads the real Shift, Ctrl and Alt keys. Holding the MouseShift button there gives the plain key. Hold the real modifier on the keyboard while you set the keybind. After that, the MouseShift button reaches it as usual.

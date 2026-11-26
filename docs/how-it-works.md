@@ -45,7 +45,7 @@ Each modifier has a number: Shift is 1, Ctrl is 2, Alt is 4. While buttons are h
 ## Safety rules
 
 - **Never touched:** the left and right mouse buttons, Escape, Enter, Print Screen, the mouse wheel and the real Shift, Ctrl and Alt keys. A mouse button used to turn the camera is refused too.
-- **Movement is never mirrored.** If a layer put movement on a key and you released the modifier first, the game would never see the key's release and your character would keep running. Movement and jump keybinds are therefore left out of every layer, and movement keys cannot be modifiers.
+- **Movement is never touched.** The game sends a key's release to whatever the key is bound to at that moment. If a layer changed a movement key while you held it, the release would go to another action and your character would keep walking. So movement keys (forward, back, strafe, turn, jump and so on) keep moving your character on every layer, movement and jump keybinds are never put on another key, and movement keys cannot be modifiers. A Shift, Ctrl or Alt keybind on a movement key, such as `Ctrl-W`, is reached with the real modifier key.
 - **Nothing by accident.** A field must be clicked before it accepts a button or key, and while it waits, what you press does not reach the game.
 - **No stuck layers.** If you release a mouse button while the game window is not focused (Alt-Tab), the game never sees the release. Out of combat MouseShift checks the real state of the button twice a second and switches the layer off when the button is no longer held. It only trusts a button the game has reported as held before, so a mouse the game does not read correctly can never switch your layer off while you hold it. After a loading screen every layer is switched off.
 
