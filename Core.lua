@@ -265,12 +265,13 @@ local function InitDatabase()
         MouseShiftDB.minimap.minimapPos = 220
     end
     -- Movement protection choices that differ from the default, per key:
-    -- true = protected, false = free.
+    -- { action = "STRAFELEFT", protected = false }.
     if type(MouseShiftDB.movementKeys) ~= "table" then
         MouseShiftDB.movementKeys = {}
     end
-    for key, protected in pairs(MouseShiftDB.movementKeys) do
-        if type(key) ~= "string" or type(protected) ~= "boolean" then
+    for key, choice in pairs(MouseShiftDB.movementKeys) do
+        if type(key) ~= "string" or type(choice) ~= "table" or type(choice.action) ~= "string"
+            or type(choice.protected) ~= "boolean" then
             MouseShiftDB.movementKeys[key] = nil
         end
     end
@@ -366,10 +367,32 @@ ns.skipped = {}
 -- Movement protection
 ---------------------------------------------------------------------------
 
--- The movement action a key performs, or nil. Reads the binding in effect,
--- including the overrides of action bar addons.
+-- True while a layer is switched on and has put its own override on the key.
+local function IsInActiveLayer(key)
+    local active = driver:GetAttribute("active-mask") or 0
+    local layer = active ~= 0 and ns.layers[active]
+    if layer then
+        for _, entry in ipairs(layer) do
+            if entry.key == key then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+-- The binding in effect on a key, including the overrides of action bar
+-- addons, but not MouseShift's own layer overrides.
+local function EffectiveAction(key)
+    if IsInActiveLayer(key) then
+        return GetBindingAction(key)
+    end
+    return GetBindingAction(key, true)
+end
+
+-- The movement action a key performs, or nil.
 local function MovementActionOf(key)
-    local action = GetBindingAction(key, true)
+    local action = EffectiveAction(key)
     if action and MOVEMENT_RANK[action] then
         return action
     end
@@ -383,18 +406,25 @@ end
 -- True when a layer must leave this key alone.
 function ns.IsKeyProtected(key)
     -- Steering with the mouse is always protected and never listed.
-    if MOUSE_CONTROL_ACTIONS[GetBindingAction(key, true) or ""] then
+    if MOUSE_CONTROL_ACTIONS[EffectiveAction(key) or ""] then
         return true
     end
     local action = MovementActionOf(key)
     if not action then
         return false
     end
+    -- A choice counts only for the movement it was made for. Bindings can
+    -- differ between characters: E may strafe on one and walk on another.
     local choice = ns.db and ns.db.movementKeys[key]
-    if choice ~= nil then
-        return choice
+    if choice and choice.action == action then
+        return choice.protected
     end
     return DefaultProtected(action)
+end
+
+local function IsDefaultChoice(key)
+    local choice = ns.db and ns.db.movementKeys[key]
+    return not (choice and choice.action == MovementActionOf(key))
 end
 
 function ns.SetKeyProtected(key, protected)
@@ -402,10 +432,13 @@ function ns.SetKeyProtected(key, protected)
         return false
     end
     local action = MovementActionOf(key)
-    if action and DefaultProtected(action) == protected then
+    if not action then
+        return false
+    end
+    if DefaultProtected(action) == protected then
         ns.db.movementKeys[key] = nil
     else
-        ns.db.movementKeys[key] = protected and true or false
+        ns.db.movementKeys[key] = { action = action, protected = protected and true or false }
     end
     return ns.Apply()
 end
@@ -418,12 +451,22 @@ function ns.ResetMovementKeys()
     return ns.Apply()
 end
 
--- The Shift, Ctrl and Alt keybinds on a key: { { combo, action }, ... }.
+-- The Shift, Ctrl and Alt keybinds on a key that the assigned mouse buttons
+-- can reach: { { combo, action }, ... }.
 local function ModifiedBindings(key)
+    local available = 0
+    for _, modifier in ipairs(ns.MODIFIERS) do
+        if ns.GetTrigger(modifier) then
+            available = available + MODIFIER_BIT[modifier]
+        end
+    end
     local result = {}
     for mask = 1, 7 do
         local combo = PrefixForMask(mask) .. key
-        local action = GetBindingAction(combo, true)
+        if bit.band(mask, available) ~= mask then
+            combo = nil
+        end
+        local action = combo and GetBindingAction(combo, true)
         if action and action ~= "" and not EXCLUDED_ACTIONS[action] and not action:find("MouseShiftDriver", 1, true) then
             result[#result + 1] = { combo = combo, action = action }
         end
@@ -448,7 +491,7 @@ function ns.GetMovementKeys()
                         key = key,
                         action = action,
                         protected = ns.IsKeyProtected(key),
-                        isDefault = ns.db.movementKeys[key] == nil,
+                        isDefault = IsDefaultChoice(key),
                         bindings = ModifiedBindings(key),
                     }
                 end

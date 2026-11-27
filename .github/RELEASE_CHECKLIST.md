@@ -16,7 +16,7 @@ Go through this list before every release, including small fixes. Most bugs that
 ## 2. Tests
 
 - [ ] Every bug fixed in this release has a test in `tests/run.lua`, and so does every bug fixed before.
-- [ ] `lua5.1 tests/run.lua` passes. The Tests workflow runs it on every push and before every release.
+- [ ] `python tests/run.py` passes (after `pip install lupa`). The Tests workflow runs it on every push and before every release.
 
 ## 3. Independent review
 
@@ -33,6 +33,7 @@ Assign Shift to mouse button 5 and Ctrl to mouse button 4, then:
 - [ ] With a `Ctrl-W` keybind set: walk with `W`, press mouse 4, release `W`. The character stops.
 - [ ] The same keys work in combat.
 - [ ] Mouseover casting with mouse 5 over the player, party and raid frames gives the Shift keybind.
+- [ ] In **Movement protection**, untick `Q` (with a `Shift-Q` keybind set): mouse 5 + `Q` gives `Shift-Q`. Tick it again: `Q` strafes.
 - [ ] `/mouseshift list` shows the expected keys.
 - [ ] The settings window, the minimap button and **Clear** work.
 - [ ] Whatever this release changed, tested directly.

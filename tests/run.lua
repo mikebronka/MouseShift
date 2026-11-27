@@ -112,7 +112,8 @@ check(q and q.protected and q.isDefault and #q.bindings == 1 and q.bindings[1].c
 ns.SetKeyProtected("Q", false)
 check(env.Layer(SHIFT)["Q"] == "ACTIONBUTTON32", "freeing Q lets Shift-Q reach Q")
 check(skippedKeys(SHIFT)["Q"] == nil, "a free key is not reported as skipped")
-check(env.MouseShiftDB.movementKeys.Q == false, "the choice is saved")
+local saved = env.MouseShiftDB.movementKeys.Q
+check(saved and saved.action == "STRAFELEFT" and saved.protected == false, "the choice is saved with its movement")
 
 ns.SetKeyProtected("SPACE", true)
 check(env.Layer(SHIFT)["SPACE"] == nil, "protecting Space keeps Shift-Space off Space")
@@ -124,6 +125,38 @@ check(env.MouseShiftDB.movementKeys.Q == nil, "choosing the default again remove
 ns.ResetMovementKeys()
 check(next(env.MouseShiftDB.movementKeys) == nil, "Defaults clears every choice")
 check(env.Layer(SHIFT)["SPACE"] == "ACTIONBUTTON40" and env.Layer(SHIFT)["Q"] == nil, "Defaults restores the default layers")
+
+print("-- Movement protection edge cases (0.4 review)")
+-- A choice made for another movement does not count.
+env.MouseShiftDB.movementKeys.E = { action = "MOVEFORWARD", protected = false }
+check(env.ns.IsKeyProtected("E"), "a choice saved for another movement is ignored")
+env.ns.ResetMovementKeys()
+
+-- Changing a key while a layer is switched on.
+env.MouseShiftDriver._attr["active-mask"] = SHIFT
+env.overrides["SPACE"] = "ACTIONBUTTON40"
+env.overrides["1"] = "ACTIONBUTTON7"
+check(not ns.IsKeyProtected("SPACE"), "while the Shift layer is on, Space still reads as jump")
+local listed = false
+for _, entry in ipairs(ns.GetMovementKeys()) do if entry.key == "SPACE" then listed = true end end
+check(listed, "while the Shift layer is on, Space stays in the list")
+ns.SetKeyProtected("SPACE", true)
+check(env.Layer(SHIFT)["SPACE"] == nil, "protecting Space while the layer is on takes effect")
+env.overrides = {}
+env.MouseShiftDriver._attr["active-mask"] = 0
+ns.ResetMovementKeys()
+
+-- Only keybinds the assigned buttons can reach are promised.
+local reach = { ["SHIFT-Q"] = "ACTIONBUTTON32", ["ALT-Q"] = "ACTIONBUTTON50" }
+for k, v in pairs(bindings) do reach[k] = reach[k] or v end
+local env2 = load_env(reach, { SHIFT = "BUTTON5" })
+local qEntry
+for _, entry in ipairs(env2.ns.GetMovementKeys()) do if entry.key == "Q" then qEntry = entry end end
+check(qEntry and #qEntry.bindings == 1 and qEntry.bindings[1].combo == "SHIFT-Q", "Alt-Q is not promised when only Shift is assigned")
+
+-- Junk saved values are dropped.
+local env3 = load_env(bindings, {}, nil)
+check(next(env3.MouseShiftDB.movementKeys) == nil, "an old save without choices loads")
 
 print("-- Settings window (smoke test)")
 local ui = load_env(bindings, { SHIFT = "BUTTON5", CTRL = "BUTTON4" }, { "Core.lua", "Config.lua" })
@@ -170,10 +203,10 @@ check(rowTips.SPACE and rowTips.SPACE:find("Your mouse button reaches", 1, true)
 
 local okClick, clickErr = pcall(rowTips.QFrame._scripts.OnMouseUp, rowTips.QFrame, "LeftButton")
 check(okClick, "clicking the Q row works" .. (okClick and "" or (": " .. tostring(clickErr))))
-check(ui.MouseShiftDB.movementKeys.Q == false and not ui.ns.IsKeyProtected("Q"), "clicking the Q row frees Q")
+check(ui.MouseShiftDB.movementKeys.Q and not ui.ns.IsKeyProtected("Q"), "clicking the Q row frees Q")
 check(ui.Layer(SHIFT)["Q"] == "ACTIONBUTTON32", "after freeing Q, Shift-Q reaches Q")
 pcall(rowTips.QFrame._scripts.OnMouseUp, rowTips.QFrame, "RightButton")
-check(ui.MouseShiftDB.movementKeys.Q == false, "a right click on the row does nothing")
+check(ui.MouseShiftDB.movementKeys.Q and ui.MouseShiftDB.movementKeys.Q.protected == false, "a right click on the row does nothing")
 
 print(("%d passed, %d failed"):format(passed, failures))
 if failures > 0 then

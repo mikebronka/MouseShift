@@ -110,7 +110,14 @@ return function(bindings, triggers, files)
         NewTicker = function() return { Cancel = function() end } end,
     }
     env.SlashCmdList = {}
-    env.GetBindingAction = function(key) return bindings[key] or "" end
+    -- Override bindings, as the game reports them with checkOverride.
+    env.overrides = {}
+    env.GetBindingAction = function(key, checkOverride)
+        if checkOverride and env.overrides[key] then
+            return env.overrides[key]
+        end
+        return bindings[key] or ""
+    end
 
     local list = {}
     for key, action in pairs(bindings) do

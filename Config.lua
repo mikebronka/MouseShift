@@ -68,7 +68,7 @@ local L = {
     KEY_DEFAULT = " (default)",
     KEY_ALWAYS = "MouseShift never changes what %s does.",
     KEY_GAIN_UNTICK = "Untick to let your mouse button reach %s.",
-    KEY_NOTHING = "%s has no Shift, Ctrl or Alt keybinds, so this changes nothing.",
+    KEY_NOTHING = "Your mouse buttons reach no Shift, Ctrl or Alt keybind on %s, so this changes nothing.",
     KEY_GAINS = "Your mouse button reaches %s.",
     KEY_RISK = "If you press the mouse button while holding %s, the movement can keep going until you press %s again.",
     KEY_TICK = "Tick to protect %s.",
@@ -449,8 +449,8 @@ local function MovementButtonTooltip(tooltip)
         list[#list + 1] = ns.KeyDisplayName(entry.key)
     end
     tooltip:AddLine(" ")
-    AddPair(tooltip, L.MOVEMENT_TIP_PROTECTED, #protected > 0 and table.concat(protected, ", ") or "-", WHITE, GREY)
-    AddPair(tooltip, L.MOVEMENT_TIP_FREE, #free > 0 and table.concat(free, ", ") or "-", WHITE, GREY)
+    AddText(tooltip, L.MOVEMENT_TIP_PROTECTED .. ": " .. (#protected > 0 and table.concat(protected, ", ") or "-"), WHITE)
+    AddText(tooltip, L.MOVEMENT_TIP_FREE .. ": " .. (#free > 0 and table.concat(free, ", ") or "-"), WHITE)
     AddText(tooltip, L.MOVEMENT_TIP_CLICK, GREY)
 end
 
@@ -648,7 +648,13 @@ local function CreateConfigFrame()
         Refresh()
     end)
 
-    frame:SetScript("OnHide", StopListening)
+    frame:SetScript("OnHide", function()
+        StopListening()
+        if movementFrame then
+            movementFrame:Hide()
+        end
+    end)
+    frame:SetToplevel(true)
 
     frame:RegisterEvent("PLAYER_REGEN_DISABLED")
     frame:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -681,9 +687,10 @@ local function CreateMovementRow()
     check.keyText:SetPoint("LEFT", check, "RIGHT", 4, 0)
     check.keyText:SetWidth(100)
     check.keyText:SetJustifyH("LEFT")
+    check.keyText:SetWordWrap(false)
     check.actionText = movementFrame:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
     check.actionText:SetPoint("LEFT", check.keyText, "RIGHT", 4, 0)
-    check.actionText:SetPoint("RIGHT", movementFrame, "RIGHT", -20, 0)
+    check.actionText:SetWidth(MOVEMENT_WIDTH - 172)
     check.actionText:SetJustifyH("LEFT")
     check.actionText:SetWordWrap(false)
     LeftClickOnly(check, function(button)
@@ -693,6 +700,10 @@ local function CreateMovementRow()
         PlayClick()
         ns.SetKeyProtected(button.entry.key, not button.entry.protected)
         Refresh()
+        -- Show the tooltip again, so it matches the new state.
+        if GameTooltip and GameTooltip:IsOwned(button.hit) then
+            button.hit:GetScript("OnEnter")(button.hit)
+        end
     end)
     -- The click and the tooltip cover the whole line, labels included.
     check.hit:ClearAllPoints()
@@ -790,6 +801,13 @@ local function CreateMovementFrame()
     end)
 
     movementFrame:SetScript("OnShow", RefreshMovement)
+    movementFrame:SetToplevel(true)
+
+    -- Combat and new key bindings change what the list shows.
+    movementFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
+    movementFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+    movementFrame:RegisterEvent("UPDATE_BINDINGS")
+    movementFrame:SetScript("OnEvent", RefreshMovement)
 end
 
 function ns.ToggleMovement()
@@ -807,6 +825,7 @@ function ns.ToggleMovement()
         movementFrame:SetPoint("CENTER")
     end
     movementFrame:Show()
+    movementFrame:Raise()
 end
 
 function ns.ToggleConfig()

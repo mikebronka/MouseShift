@@ -35,7 +35,7 @@ MouseShift is built around a few rules that do not change between versions:
 - **One press, one action.** MouseShift never automates anything. It only changes which keybind a key press reaches, exactly as holding Shift would. Nothing is cast that you did not press.
 - **Your keybinds stay yours.** MouseShift uses the Shift, Ctrl and Alt keybinds you already have. It never changes or saves them. Remove it and everything is as before.
 - **Works in combat.** A feature like this is useless if it stops when the fight starts.
-- **Hard to break.** The left and right mouse buttons, Escape and movement can never be taken over, and nothing is assigned by accident.
+- **Hard to break.** The left and right mouse buttons and Escape can never be taken over, movement keys are protected unless you choose otherwise, and nothing is assigned by accident.
 - **Small and quiet.** One small settings window and a minimap button you can hide, no changes to your interface, no extra libraries.
 - **A companion, not a replacement.** MouseShift fills a gap in the game, not in another addon, so it works next to the addons you already use. See [A companion to your addons](A-Companion-To-Your-Addons).
 

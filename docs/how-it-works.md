@@ -46,6 +46,8 @@ Each modifier has a number: Shift is 1, Ctrl is 2, Alt is 4. While buttons are h
 
 - **Never touched:** the left and right mouse buttons, Escape, Enter, Print Screen, the mouse wheel and the real Shift, Ctrl and Alt keys. A mouse button used to turn the camera is refused too.
 - **Movement protection.** The game sends a key's release to whatever the key is bound to at that moment. If a layer changed a movement key while you held it, the release would go to another action and your character would keep walking. So protected movement keys keep doing what they do on every layer, movement and jump keybinds are never put on another key, and movement keys cannot be modifiers. Which movement keys are protected is your choice: see the next section.
+- **Nothing by accident.** A field must be clicked before it accepts a button or key, and while it waits, what you press does not reach the game.
+- **No stuck layers.** If you release a mouse button while the game window is not focused (Alt-Tab), the game never sees the release. Out of combat MouseShift checks the real state of the button twice a second and switches the layer off when the button is no longer held. It only trusts a button the game has reported as held before, so a mouse the game does not read correctly can never switch your layer off while you hold it. After a loading screen every layer is switched off.
 
 ## Movement protection
 
@@ -55,8 +57,6 @@ The **Movement protection** button in the settings window opens a list of the ke
 - **Free** (unticked): MouseShift reaches the key's Shift, Ctrl and Alt keybinds like any other key. If you press the MouseShift button while holding the key, the movement can keep going until you press the key again. Holding the jump key to rise while flying or swimming works the same way.
 
 By default, keys that walk, strafe or turn are protected and the jump key is free. **Defaults** brings that back. Pointing at a key shows which keybinds you gain by freeing it. Steering with a mouse button is always protected and not listed.
-- **Nothing by accident.** A field must be clicked before it accepts a button or key, and while it waits, what you press does not reach the game.
-- **No stuck layers.** If you release a mouse button while the game window is not focused (Alt-Tab), the game never sees the release. Out of combat MouseShift checks the real state of the button twice a second and switches the layer off when the button is no longer held. It only trusts a button the game has reported as held before, so a mouse the game does not read correctly can never switch your layer off while you hold it. After a loading screen every layer is switched off.
 
 ## Unit frames
 
