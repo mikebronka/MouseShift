@@ -16,11 +16,13 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - name: Install Lua 5.1
-        run: sudo apt-get update && sudo apt-get install -y lua5.1
+        run: pip install lupa
 
-      - name: Check syntax
-        run: for file in *.lua; do luac5.1 -p "$file" || exit 1; done
-
-      - name: Run regression tests
-        run: lua5.1 tests/run.lua
+      - name: Check syntax and run regression tests
+        run: python tests/run.py
