@@ -154,9 +154,27 @@ local qEntry
 for _, entry in ipairs(env2.ns.GetMovementKeys()) do if entry.key == "Q" then qEntry = entry end end
 check(qEntry and #qEntry.bindings == 1 and qEntry.bindings[1].combo == "SHIFT-Q", "Alt-Q is not promised when only Shift is assigned")
 
--- Junk saved values are dropped.
-local env3 = load_env(bindings, {}, nil)
-check(next(env3.MouseShiftDB.movementKeys) == nil, "an old save without choices loads")
+-- Saved choices are checked when the addon loads.
+local env3 = load_env(bindings, {}, nil, {
+    Q = false,                                        -- old 0.4 test build format
+    E = { action = 5, protected = true },             -- junk
+    SPACE = { action = "JUMP", protected = true },    -- valid
+})
+check(env3.MouseShiftDB.movementKeys.Q == nil and env3.MouseShiftDB.movementKeys.E == nil, "invalid saved choices are dropped")
+check(env3.MouseShiftDB.movementKeys.SPACE ~= nil and env3.ns.IsKeyProtected("SPACE"), "a valid saved choice is kept")
+
+-- Another addon's override on a movement key (0.4 second review):
+-- the layer must stay on while the button is held.
+local env4 = load_env(bindings, { SHIFT = "BUTTON5" })
+env4.overrides["Q"] = "CLICK BindPadMacro:LeftButton"
+env4.ns.Apply()
+check(env4.Layer(SHIFT)["Q"] == "ACTIONBUTTON32", "a movement key overridden by another addon is not movement")
+env4.MouseShiftDriver._attr["active-mask"] = SHIFT
+env4.overrides["Q"] = "ACTIONBUTTON32"                -- MouseShift's own layer override
+env4.overrides["1"] = "ACTIONBUTTON7"
+check(not env4.ns.IsKeyProtected("Q"), "while held, the key still reads as the other addon's binding")
+env4.ns.Apply()
+check(env4.MouseShiftDriver._attr["active-mask"] == SHIFT, "a rebuild while the button is held keeps the layer on")
 
 print("-- Settings window (smoke test)")
 local ui = load_env(bindings, { SHIFT = "BUTTON5", CTRL = "BUTTON4" }, { "Core.lua", "Config.lua" })

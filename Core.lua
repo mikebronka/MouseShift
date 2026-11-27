@@ -381,10 +381,18 @@ local function IsInActiveLayer(key)
     return false
 end
 
--- The binding in effect on a key, including the overrides of action bar
--- addons, but not MouseShift's own layer overrides.
+-- What each layer key was bound to outside MouseShift's layers, including
+-- the overrides of other addons, recorded when the layers were built.
+local baseActions = {}
+
+-- The binding in effect on a key, including the overrides of other addons,
+-- but not MouseShift's own layer overrides.
 local function EffectiveAction(key)
     if IsInActiveLayer(key) then
+        local recorded = baseActions[key]
+        if recorded ~= nil then
+            return recorded
+        end
         return GetBindingAction(key)
     end
     return GetBindingAction(key, true)
@@ -513,7 +521,7 @@ end
 
 -- Returns the layer for one combination of modifiers, and the keys it had
 -- to skip because they are protected movement keys.
-local function CollectLayer(mask, triggerKeys)
+local function CollectLayer(mask, triggerKeys, recorded)
     local prefix = PrefixForMask(mask)
     local found, skipped = {}, {}
 
@@ -535,6 +543,7 @@ local function CollectLayer(mask, triggerKeys)
             return
         end
         found[base] = action
+        recorded[base] = EffectiveAction(base) or ""
     end
 
     -- Bindings listed in the key binding interface.
@@ -573,13 +582,13 @@ local function CollectAllLayers()
         end
     end
 
-    local layers, skipped = {}, {}
+    local layers, skipped, recorded = {}, {}, {}
     for mask = 1, 7 do
         if bit.band(mask, availableBits) == mask then
-            layers[mask], skipped[mask] = CollectLayer(mask, triggerKeys)
+            layers[mask], skipped[mask] = CollectLayer(mask, triggerKeys, recorded)
         end
     end
-    return layers, skipped
+    return layers, skipped, recorded
 end
 
 local function Signature(layers)
@@ -660,8 +669,9 @@ function ns.Apply()
     end
     rebuildPending = false
 
-    local layers, skipped = CollectAllLayers()
+    local layers, skipped, recorded = CollectAllLayers()
     ns.skipped = skipped
+    baseActions = recorded
     local signature = Signature(layers)
     if signature == lastSignature then
         -- Nothing changed. Returning here also keeps the UPDATE_BINDINGS

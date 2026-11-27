@@ -1,10 +1,10 @@
 -- MouseShift test mock: a minimal stand-in for the WoW API, enough to load
 -- Core.lua and inspect the layers it builds. Runs on plain Lua 5.1.
 --
--- Usage: local env = dofile("tests/mock.lua")(bindings, triggers, files)
--- files defaults to { "Core.lua" }.
+-- Usage: local env = dofile("tests/mock.lua")(bindings, triggers, files, movementKeys)
+-- files defaults to { "Core.lua" }; movementKeys is a saved choices table.
 
-return function(bindings, triggers, files)
+return function(bindings, triggers, files, movementKeys)
     local frames = {}
 
     local function band(a, b)
@@ -111,7 +111,6 @@ return function(bindings, triggers, files)
     }
     env.SlashCmdList = {}
     -- Override bindings, as the game reports them with checkOverride.
-    env.overrides = {}
     env.GetBindingAction = function(key, checkOverride)
         if checkOverride and env.overrides[key] then
             return env.overrides[key]
@@ -132,7 +131,9 @@ return function(bindings, triggers, files)
         end
     end
 
-    env.MouseShiftDB = { triggers = triggers or {} }
+    env.MouseShiftDB = { triggers = triggers or {}, movementKeys = movementKeys }
+    -- Overrides set before login, such as another addon's key bindings.
+    env.overrides = {}
 
     local ns = {}
     for _, file in ipairs(files or { "Core.lua" }) do

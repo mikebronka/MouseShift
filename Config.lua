@@ -102,6 +102,20 @@ local listeningRow
 local movementFrame
 local RefreshMovement
 
+-- PLAYER_REGEN_DISABLED fires just before combat lockdown starts, so
+-- InCombatLockdown() is still false while it is handled. This flag covers
+-- that moment.
+local combatStarting = false
+local function IsLocked()
+    return combatStarting or InCombatLockdown()
+end
+local combatWatcher = CreateFrame("Frame")
+combatWatcher:RegisterEvent("PLAYER_REGEN_DISABLED")
+combatWatcher:RegisterEvent("PLAYER_REGEN_ENABLED")
+combatWatcher:SetScript("OnEvent", function(_, event)
+    combatStarting = event == "PLAYER_REGEN_DISABLED"
+end)
+
 local function PlayClick()
     if PlaySound and SOUNDKIT and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON then
         PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
@@ -128,7 +142,7 @@ local function Refresh()
     if not frame then
         return
     end
-    local locked = InCombatLockdown()
+    local locked = IsLocked()
     for _, row in ipairs(rows) do
         local key = ns.GetTrigger(row.modifier)
         if row == listeningRow then
@@ -659,6 +673,7 @@ local function CreateConfigFrame()
     frame:RegisterEvent("PLAYER_REGEN_DISABLED")
     frame:RegisterEvent("PLAYER_REGEN_ENABLED")
     frame:SetScript("OnEvent", function(_, event)
+        combatStarting = event == "PLAYER_REGEN_DISABLED"
         if not frame:IsShown() then
             return
         end
@@ -727,7 +742,7 @@ RefreshMovement = function()
     if not (movementFrame and movementFrame:IsShown()) then
         return
     end
-    local locked = InCombatLockdown()
+    local locked = IsLocked()
     local list = ns.GetMovementKeys()
     for index, entry in ipairs(list) do
         local row = movementFrame.rows[index]
@@ -807,7 +822,14 @@ local function CreateMovementFrame()
     movementFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
     movementFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
     movementFrame:RegisterEvent("UPDATE_BINDINGS")
-    movementFrame:SetScript("OnEvent", RefreshMovement)
+    movementFrame:SetScript("OnEvent", function(_, event)
+        if event == "PLAYER_REGEN_DISABLED" then
+            combatStarting = true
+        elseif event == "PLAYER_REGEN_ENABLED" then
+            combatStarting = false
+        end
+        RefreshMovement()
+    end)
 end
 
 function ns.ToggleMovement()
