@@ -176,6 +176,13 @@ check(not env4.ns.IsKeyProtected("Q"), "while held, the key still reads as the o
 env4.ns.Apply()
 check(env4.MouseShiftDriver._attr["active-mask"] == SHIFT, "a rebuild while the button is held keeps the layer on")
 
+print("-- Action names (0.4)")
+check(ns.ActionDisplayName("CLICK BT4Button13:Keybind") == "Bartender button 13", "Bartender buttons get a readable name")
+check(ns.ActionDisplayName("CLICK ElvUI_Bar1Button5:LeftButton") == "ElvUI bar 1 button 5", "ElvUI buttons get a readable name")
+check(ns.ActionDisplayName("CLICK DominosActionButton7:HOTKEY") == "Dominos button 7", "Dominos buttons get a readable name")
+check(ns.ActionDisplayName("CLICK SomeAddonButton:LeftButton") == "SomeAddonButton", "other clicks show the frame name")
+check(ns.ActionDisplayName("ACTIONBUTTON1") == "ACTIONBUTTON1", "a binding without a game name is shown as it is")
+
 print("-- Settings window (smoke test)")
 local ui = load_env(bindings, { SHIFT = "BUTTON5", CTRL = "BUTTON4" }, { "Core.lua", "Config.lua" })
 local tip = ui.GameTooltip

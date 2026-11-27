@@ -228,10 +228,29 @@ function ns.CheckTrigger(key, skipBindings)
 end
 
 -- Readable name of a binding action, for example "Action Button 1".
+-- Buttons of popular action bar addons, bound as "CLICK <frame>:<button>".
+local CLICK_NAMES = {
+    { pattern = "^BT4Button(%d+)$", format = "Bartender button %s" },
+    { pattern = "^ElvUI_Bar(%d+)Button(%d+)$", format = "ElvUI bar %s button %s" },
+    { pattern = "^DominosActionButton(%d+)$", format = "Dominos button %s" },
+}
+
 function ns.ActionDisplayName(action)
     local name = _G["BINDING_NAME_" .. action]
     if name and name ~= "" then
         return name
+    end
+    -- A click on a button frame: name the frame, without "CLICK" and the
+    -- mouse button.
+    local frameName = action:match("^CLICK ([^:]+)")
+    if frameName then
+        for _, known in ipairs(CLICK_NAMES) do
+            local first, second = frameName:match(known.pattern)
+            if first then
+                return known.format:format(first, second)
+            end
+        end
+        return frameName
     end
     return action
 end
