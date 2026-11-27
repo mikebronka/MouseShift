@@ -36,6 +36,42 @@ local L = {
     PANEL_TEXT = "Use mouse buttons or other keys as Shift, Ctrl and Alt.",
     COMPARTMENT_HINT = "Click to open the settings.",
     SHOW_MINIMAP = "Show minimap button",
+    MINIMAP_TIP = "A button on the minimap that opens this window.",
+    MINIMAP_TIP_COMMAND = "You can also type /mouseshift minimap.",
+
+    FIELD_TIP_SET = "Hold %s and press a key to use its %s keybind.",
+    FIELD_TIP_EMPTY = "Click, then press the mouse button or key you want to use as %s.",
+    FIELD_TIP_CHANGE = "Click to choose another button or key.",
+    CLEAR_TIP = "Stop using %s as %s. Its own keybind comes back.",
+
+    LAYER_TITLE = "%s layer: %s",
+    LAYER_EMPTY = "None of your keybinds use %s yet. Set them in the game's key bindings: hold the real %s and press a key.",
+    LAYER_MORE = "%d more. Type /mouseshift list to see all.",
+    LAYER_SKIPPED = "Skipped: protected movement keys",
+    LAYER_SKIPPED_HINT = "These keybinds work with the real %s key.",
+    LAYER_SKIPPED_CHANGE = "Change this in Movement protection.",
+
+    MOVEMENT = "Movement protection",
+    MOVEMENT_BUTTON = "Movement protection...",
+    MOVEMENT_SUMMARY = "%d protected, %d free",
+    MOVEMENT_NONE = "no movement keys found",
+    MOVEMENT_TIP = "Protected keys always move your character. MouseShift never changes what they do, so you never keep walking by accident.",
+    MOVEMENT_TIP_PROTECTED = "Protected",
+    MOVEMENT_TIP_FREE = "Free",
+    MOVEMENT_TIP_CLICK = "Click to choose the keys. Nothing is bound here.",
+    MOVEMENT_HEADER = "Protect from MouseShift:",
+    MOVEMENT_EMPTY = "No keys are bound to movement.",
+    DEFAULTS = "Defaults",
+    DONE = "Done",
+    KEY_PROTECTED = "Protected",
+    KEY_FREE = "Not protected",
+    KEY_DEFAULT = " (default)",
+    KEY_ALWAYS = "MouseShift never changes what %s does.",
+    KEY_GAIN_UNTICK = "Untick to let your mouse button reach %s.",
+    KEY_NOTHING = "%s has no Shift, Ctrl or Alt keybinds, so this changes nothing.",
+    KEY_GAINS = "Your mouse button reaches %s.",
+    KEY_RISK = "If you press the mouse button while holding %s, the movement can keep going until you press %s again.",
+    KEY_TICK = "Tick to protect %s.",
 }
 
 local MODIFIER_LABELS = {
@@ -53,13 +89,18 @@ local ROW_HEIGHT = 34
 local ROWS_TOP = 84
 -- Width of the binding count column on the right.
 local COUNT_WIDTH = 96
--- Height of the row with the minimap button checkbox, below the modifiers.
-local OPTIONS_HEIGHT = 32
+-- Height of the options below the modifiers: the Movement protection button
+-- and the minimap button checkbox.
+local OPTIONS_HEIGHT = 66
+-- Keys listed in a layer tooltip before "more".
+local TOOLTIP_KEYS = 12
 
 local frame
 local rows = {}
 local listener
 local listeningRow
+local movementFrame
+local RefreshMovement
 
 local function PlayClick()
     if PlaySound and SOUNDKIT and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON then
@@ -108,6 +149,24 @@ local function Refresh()
     end
     if frame.minimapCheck and ns.IsMinimapButtonShown then
         frame.minimapCheck:SetChecked(ns.IsMinimapButtonShown() and true or false)
+    end
+    if frame.movementSummary then
+        local protected, free = 0, 0
+        for _, entry in ipairs(ns.GetMovementKeys()) do
+            if entry.protected then
+                protected = protected + 1
+            else
+                free = free + 1
+            end
+        end
+        if protected + free == 0 then
+            frame.movementSummary:SetText(L.MOVEMENT_NONE)
+        else
+            frame.movementSummary:SetText(L.MOVEMENT_SUMMARY:format(protected, free))
+        end
+    end
+    if RefreshMovement then
+        RefreshMovement()
     end
 end
 
@@ -261,15 +320,26 @@ local function LeftClickOnly(button, onClick)
     hit.button = button
     button.hit = hit
 
-    hit:SetScript("OnEnter", function()
+    hit:SetScript("OnEnter", function(self)
         if button:IsEnabled() then
             button:LockHighlight()
+        end
+        if button.tooltip and GameTooltip then
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+            if button.tooltip(GameTooltip) == false then
+                GameTooltip:Hide()
+            else
+                GameTooltip:Show()
+            end
         end
     end)
     hit:SetScript("OnLeave", function()
         button:UnlockHighlight()
         if button:IsEnabled() then
             button:SetButtonState("NORMAL")
+        end
+        if button.tooltip and GameTooltip then
+            GameTooltip:Hide()
         end
     end)
     hit:SetScript("OnMouseDown", function(_, mouseButton)
@@ -284,6 +354,152 @@ local function LeftClickOnly(button, onClick)
         button:SetButtonState("NORMAL")
         if self:IsMouseOver() then
             onClick(button)
+        end
+    end)
+end
+
+---------------------------------------------------------------------------
+-- Tooltips
+---------------------------------------------------------------------------
+
+local GOLD = { 1, 0.82, 0 }
+local WHITE = { 1, 1, 1 }
+local GREY = { 0.62, 0.62, 0.62 }
+local GREEN = { 0.25, 1, 0.25 }
+local ORANGE = { 1, 0.6, 0.3 }
+
+local function AddText(tooltip, text, color)
+    tooltip:AddLine(text, color[1], color[2], color[3], true)
+end
+
+local function AddPair(tooltip, left, right, leftColor, rightColor)
+    tooltip:AddDoubleLine(left, right, leftColor[1], leftColor[2], leftColor[3], rightColor[1], rightColor[2], rightColor[3])
+end
+
+-- "Shift-Q: Bandage, Ctrl-Q: Kick"
+local function BindingList(bindings)
+    local parts = {}
+    for _, binding in ipairs(bindings) do
+        parts[#parts + 1] = ns.KeyDisplayName(binding.combo) .. ": " .. ns.ActionDisplayName(binding.action)
+    end
+    return table.concat(parts, ", ")
+end
+
+local function FieldTooltip(row)
+    return function(tooltip)
+        local label = MODIFIER_LABELS[row.modifier]
+        local key = ns.GetTrigger(row.modifier)
+        tooltip:SetText(label)
+        if key then
+            AddText(tooltip, L.FIELD_TIP_SET:format(ns.KeyDisplayName(key), label), GOLD)
+            AddText(tooltip, L.FIELD_TIP_CHANGE, GREY)
+        else
+            AddText(tooltip, L.FIELD_TIP_EMPTY:format(label), GOLD)
+        end
+    end
+end
+
+local function ClearTooltip(row)
+    return function(tooltip)
+        local key = ns.GetTrigger(row.modifier)
+        if not key then
+            return false
+        end
+        tooltip:SetText(L.CLEAR)
+        AddText(tooltip, L.CLEAR_TIP:format(ns.KeyDisplayName(key), MODIFIER_LABELS[row.modifier]), WHITE)
+    end
+end
+
+local function LayerTooltip(row)
+    return function(tooltip)
+        if not ns.GetTrigger(row.modifier) then
+            return false
+        end
+        local label = MODIFIER_LABELS[row.modifier]
+        local layer, skipped = ns.LayerFor(row.modifier)
+        tooltip:SetText(L.LAYER_TITLE:format(label, KeysText(#layer)))
+        if #layer == 0 then
+            AddText(tooltip, L.LAYER_EMPTY:format(label, label), GOLD)
+        end
+        for index = 1, math.min(#layer, TOOLTIP_KEYS) do
+            local entry = layer[index]
+            AddPair(tooltip, ns.KeyDisplayName(entry.key), ns.ActionDisplayName(entry.action), GOLD, WHITE)
+        end
+        if #layer > TOOLTIP_KEYS then
+            AddText(tooltip, L.LAYER_MORE:format(#layer - TOOLTIP_KEYS), GREY)
+        end
+        if #skipped > 0 then
+            tooltip:AddLine(" ")
+            AddText(tooltip, L.LAYER_SKIPPED, ORANGE)
+            for _, entry in ipairs(skipped) do
+                AddPair(tooltip, ns.KeyDisplayName(entry.key), ns.ActionDisplayName(entry.action), GOLD, GREY)
+            end
+            AddText(tooltip, L.LAYER_SKIPPED_HINT:format(label), GREEN)
+            AddText(tooltip, L.LAYER_SKIPPED_CHANGE, GREY)
+        end
+    end
+end
+
+local function MovementButtonTooltip(tooltip)
+    tooltip:SetText(L.MOVEMENT)
+    AddText(tooltip, L.MOVEMENT_TIP, GOLD)
+    local protected, free = {}, {}
+    for _, entry in ipairs(ns.GetMovementKeys()) do
+        local list = entry.protected and protected or free
+        list[#list + 1] = ns.KeyDisplayName(entry.key)
+    end
+    tooltip:AddLine(" ")
+    AddPair(tooltip, L.MOVEMENT_TIP_PROTECTED, #protected > 0 and table.concat(protected, ", ") or "-", WHITE, GREY)
+    AddPair(tooltip, L.MOVEMENT_TIP_FREE, #free > 0 and table.concat(free, ", ") or "-", WHITE, GREY)
+    AddText(tooltip, L.MOVEMENT_TIP_CLICK, GREY)
+end
+
+local function MinimapTooltip(tooltip)
+    tooltip:SetText(L.SHOW_MINIMAP)
+    AddText(tooltip, L.MINIMAP_TIP, GOLD)
+    AddText(tooltip, L.MINIMAP_TIP_COMMAND, GREY)
+end
+
+local function KeyTooltip(tooltip, entry)
+    if not entry then
+        return false
+    end
+    local name = ns.KeyDisplayName(entry.key)
+    tooltip:SetText(name .. ": " .. ns.ActionDisplayName(entry.action))
+    local state = entry.protected and L.KEY_PROTECTED or L.KEY_FREE
+    if entry.isDefault then
+        state = state .. L.KEY_DEFAULT
+    end
+    AddText(tooltip, state, GREY)
+    if #entry.bindings == 0 then
+        AddText(tooltip, L.KEY_NOTHING:format(name), GREY)
+    elseif entry.protected then
+        AddText(tooltip, L.KEY_ALWAYS:format(name), GOLD)
+        AddText(tooltip, L.KEY_GAIN_UNTICK:format(BindingList(entry.bindings)), GREY)
+    else
+        AddText(tooltip, L.KEY_GAINS:format(BindingList(entry.bindings)), GREEN)
+        AddText(tooltip, L.KEY_RISK:format(name, name), ORANGE)
+        AddText(tooltip, L.KEY_TICK:format(name), GREY)
+    end
+end
+
+-- Shows a tooltip while the mouse is over a plain frame.
+local function AttachTooltip(target, fill)
+    target:EnableMouse(true)
+    target:SetScript("OnEnter", function(self)
+        if not GameTooltip then
+            return
+        end
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        if fill(GameTooltip) == false then
+            GameTooltip:Hide()
+        else
+            GameTooltip:Show()
+        end
+    end)
+    target:SetScript("OnLeave", function()
+        if GameTooltip then
+            GameTooltip:Hide()
         end
     end)
 end
@@ -304,6 +520,7 @@ local function CreateRow(parent, modifier, index)
     row.capture.row = row
     -- Only a left click reacts. Other mouse buttons do nothing at all here.
     LeftClickOnly(row.capture, OnCaptureClick)
+    row.capture.tooltip = FieldTooltip(row)
 
     row.clear = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
     row.clear:SetPoint("LEFT", row.capture, "RIGHT", 6, 0)
@@ -311,12 +528,19 @@ local function CreateRow(parent, modifier, index)
     row.clear:SetText(L.CLEAR)
     row.clear.modifier = modifier
     LeftClickOnly(row.clear, OnClearClick)
+    row.clear.tooltip = ClearTooltip(row)
 
     row.count = parent:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
     row.count:SetPoint("LEFT", row.clear, "RIGHT", 8, 0)
     row.count:SetWidth(COUNT_WIDTH)
     row.count:SetJustifyH("LEFT")
     row.count:SetWordWrap(false)
+
+    -- Pointing at the count shows which keys the layer uses and skips.
+    row.countHit = CreateFrame("Frame", nil, parent)
+    row.countHit:SetPoint("LEFT", row.clear, "RIGHT", 4, 0)
+    row.countHit:SetSize(COUNT_WIDTH + 4, 26)
+    AttachTooltip(row.countHit, LayerTooltip(row))
 
     return row
 end
@@ -372,9 +596,24 @@ local function CreateConfigFrame()
     frame.status = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     -- Minimap button checkbox. Like the fields, it reacts to the left mouse
     -- button only; the invisible click layer also covers its label.
+    local optionsTop = -ROWS_TOP - #ns.MODIFIERS * ROW_HEIGHT
+
+    -- Movement protection: opens its own window.
+    local movementButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+    movementButton:SetPoint("TOPLEFT", 84, optionsTop - 2)
+    movementButton:SetSize(190, 26)
+    movementButton:SetText(L.MOVEMENT_BUTTON)
+    LeftClickOnly(movementButton, function()
+        PlayClick()
+        ns.ToggleMovement()
+    end)
+    movementButton.tooltip = MovementButtonTooltip
+    frame.movementSummary = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+    frame.movementSummary:SetPoint("LEFT", movementButton, "RIGHT", 10, 0)
+
     local check = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
     check:SetSize(24, 24)
-    check:SetPoint("TOPLEFT", 80, -ROWS_TOP - #ns.MODIFIERS * ROW_HEIGHT - 2)
+    check:SetPoint("TOPLEFT", 80, optionsTop - 34)
     local checkLabel = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
     checkLabel:SetPoint("LEFT", check, "RIGHT", 4, 0)
     checkLabel:SetText(L.SHOW_MINIMAP)
@@ -389,6 +628,7 @@ local function CreateConfigFrame()
     check.hit:SetPoint("TOPLEFT", check, "TOPLEFT")
     check.hit:SetPoint("BOTTOM", check, "BOTTOM")
     check.hit:SetPoint("RIGHT", checkLabel, "RIGHT", 4, 0)
+    check.tooltip = MinimapTooltip
     frame.minimapCheck = check
 
     frame.status:SetPoint("TOPLEFT", 24, -ROWS_TOP - #ns.MODIFIERS * ROW_HEIGHT - OPTIONS_HEIGHT - 4)
@@ -424,6 +664,149 @@ local function CreateConfigFrame()
         end
         Refresh()
     end)
+end
+
+---------------------------------------------------------------------------
+-- Movement protection window
+---------------------------------------------------------------------------
+
+local MOVEMENT_WIDTH = 300
+local MOVEMENT_ROW_HEIGHT = 26
+local MOVEMENT_ROWS_TOP = 58
+
+local function CreateMovementRow()
+    local check = CreateFrame("CheckButton", nil, movementFrame, "UICheckButtonTemplate")
+    check:SetSize(24, 24)
+    check.keyText = movementFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    check.keyText:SetPoint("LEFT", check, "RIGHT", 4, 0)
+    check.keyText:SetWidth(80)
+    check.keyText:SetJustifyH("LEFT")
+    check.actionText = movementFrame:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+    check.actionText:SetPoint("LEFT", check.keyText, "RIGHT", 4, 0)
+    check.actionText:SetPoint("RIGHT", movementFrame, "RIGHT", -20, 0)
+    check.actionText:SetJustifyH("LEFT")
+    check.actionText:SetWordWrap(false)
+    LeftClickOnly(check, function(button)
+        if InCombatLockdown() or not button.entry then
+            return
+        end
+        PlayClick()
+        ns.SetKeyProtected(button.entry.key, not button.entry.protected)
+        Refresh()
+    end)
+    -- The click and the tooltip cover the whole line, labels included.
+    check.hit:ClearAllPoints()
+    check.hit:SetPoint("TOPLEFT", check, "TOPLEFT")
+    check.hit:SetPoint("BOTTOM", check, "BOTTOM")
+    check.hit:SetPoint("RIGHT", movementFrame, "RIGHT", -16, 0)
+    check.tooltip = function(tooltip)
+        return KeyTooltip(tooltip, check.entry)
+    end
+    return check
+end
+
+local function ShowMovementRow(row, shown)
+    row:SetShown(shown)
+    row.keyText:SetShown(shown)
+    row.actionText:SetShown(shown)
+    row.hit:SetShown(shown)
+end
+
+RefreshMovement = function()
+    if not (movementFrame and movementFrame:IsShown()) then
+        return
+    end
+    local locked = InCombatLockdown()
+    local list = ns.GetMovementKeys()
+    for index, entry in ipairs(list) do
+        local row = movementFrame.rows[index]
+        if not row then
+            row = CreateMovementRow()
+            movementFrame.rows[index] = row
+        end
+        row:ClearAllPoints()
+        row:SetPoint("TOPLEFT", 20, -MOVEMENT_ROWS_TOP - (index - 1) * MOVEMENT_ROW_HEIGHT)
+        row.entry = entry
+        row:SetChecked(entry.protected)
+        row:SetEnabled(not locked)
+        row.keyText:SetText(ns.KeyDisplayName(entry.key))
+        row.actionText:SetText(ns.ActionDisplayName(entry.action))
+        ShowMovementRow(row, true)
+    end
+    for index = #list + 1, #movementFrame.rows do
+        movementFrame.rows[index].entry = nil
+        ShowMovementRow(movementFrame.rows[index], false)
+    end
+    movementFrame.empty:SetShown(#list == 0)
+    movementFrame.defaults:SetEnabled(not locked)
+    movementFrame:SetHeight(MOVEMENT_ROWS_TOP + math.max(#list, 1) * MOVEMENT_ROW_HEIGHT + 56)
+end
+
+local function CreateMovementFrame()
+    movementFrame = CreateFrame("Frame", "MouseShiftMovement", UIParent, "BasicFrameTemplateWithInset")
+    movementFrame:SetSize(MOVEMENT_WIDTH, 200)
+    movementFrame:SetFrameStrata("DIALOG")
+    movementFrame:SetClampedToScreen(true)
+    movementFrame:SetMovable(true)
+    movementFrame:EnableMouse(true)
+    movementFrame:RegisterForDrag("LeftButton")
+    movementFrame:SetScript("OnDragStart", movementFrame.StartMoving)
+    movementFrame:SetScript("OnDragStop", movementFrame.StopMovingOrSizing)
+    movementFrame:Hide()
+    tinsert(UISpecialFrames, movementFrame:GetName())
+    movementFrame.rows = {}
+
+    local title = movementFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    title:SetPoint("TOP", 0, -5)
+    title:SetText(L.MOVEMENT)
+
+    local header = movementFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    header:SetPoint("TOPLEFT", 20, -34)
+    header:SetText(L.MOVEMENT_HEADER)
+
+    movementFrame.empty = movementFrame:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+    movementFrame.empty:SetPoint("TOPLEFT", 24, -MOVEMENT_ROWS_TOP - 6)
+    movementFrame.empty:SetText(L.MOVEMENT_EMPTY)
+
+    movementFrame.defaults = CreateFrame("Button", nil, movementFrame, "UIPanelButtonTemplate")
+    movementFrame.defaults:SetPoint("BOTTOMLEFT", 18, 14)
+    movementFrame.defaults:SetSize(110, 24)
+    movementFrame.defaults:SetText(L.DEFAULTS)
+    LeftClickOnly(movementFrame.defaults, function()
+        if InCombatLockdown() then
+            return
+        end
+        PlayClick()
+        ns.ResetMovementKeys()
+        Refresh()
+    end)
+
+    local done = CreateFrame("Button", nil, movementFrame, "UIPanelButtonTemplate")
+    done:SetPoint("BOTTOMRIGHT", -18, 14)
+    done:SetSize(90, 24)
+    done:SetText(L.DONE)
+    LeftClickOnly(done, function()
+        movementFrame:Hide()
+    end)
+
+    movementFrame:SetScript("OnShow", RefreshMovement)
+end
+
+function ns.ToggleMovement()
+    if not movementFrame then
+        CreateMovementFrame()
+    end
+    if movementFrame:IsShown() then
+        movementFrame:Hide()
+        return
+    end
+    movementFrame:ClearAllPoints()
+    if frame and frame:IsShown() then
+        movementFrame:SetPoint("TOPLEFT", frame, "TOPRIGHT", 4, 0)
+    else
+        movementFrame:SetPoint("CENTER")
+    end
+    movementFrame:Show()
 end
 
 function ns.ToggleConfig()

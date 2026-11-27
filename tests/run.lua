@@ -88,6 +88,43 @@ check(ns.CheckTrigger("BUTTON3") ~= nil, "middle button bound to steering refuse
 check(ns.CheckTrigger("BUTTON4") == nil, "mouse button 4 accepted as trigger")
 check(ns.CheckTrigger("F") == nil, "a free keyboard key accepted as trigger")
 
+print("-- Movement protection (0.4)")
+local function skippedKeys(mask)
+    local keys = {}
+    for _, entry in ipairs(ns.skipped[mask] or {}) do keys[entry.key] = entry.action end
+    return keys
+end
+check(skippedKeys(SHIFT)["Q"] == "ACTIONBUTTON32", "Shift-Q is reported as skipped")
+check(skippedKeys(CTRL)["W"] == "ACTIONBUTTON30", "Ctrl-W is reported as skipped")
+check(ns.IsKeyProtected("W") and ns.IsKeyProtected("Q"), "walking and strafing keys protected by default")
+check(not ns.IsKeyProtected("SPACE"), "jump key free by default")
+check(not ns.IsKeyProtected("1"), "a non-movement key is never protected")
+check(ns.IsKeyProtected("BUTTON3"), "a mouse button used for steering is always protected")
+
+local list = ns.GetMovementKeys()
+local order = {}
+for _, entry in ipairs(list) do order[#order + 1] = entry.key end
+check(table.concat(order, ",") == "W,S,A,D,Q,E,SPACE", "movement keys listed in order (got " .. table.concat(order, ",") .. ")")
+local q
+for _, entry in ipairs(list) do if entry.key == "Q" then q = entry end end
+check(q and q.protected and q.isDefault and #q.bindings == 1 and q.bindings[1].combo == "SHIFT-Q", "Q entry shows its Shift-Q keybind")
+
+ns.SetKeyProtected("Q", false)
+check(env.Layer(SHIFT)["Q"] == "ACTIONBUTTON32", "freeing Q lets Shift-Q reach Q")
+check(skippedKeys(SHIFT)["Q"] == nil, "a free key is not reported as skipped")
+check(env.MouseShiftDB.movementKeys.Q == false, "the choice is saved")
+
+ns.SetKeyProtected("SPACE", true)
+check(env.Layer(SHIFT)["SPACE"] == nil, "protecting Space keeps Shift-Space off Space")
+check(env.Layer(CTRL)["SPACE"] == nil, "protecting Space applies to every layer")
+
+ns.SetKeyProtected("Q", true)
+check(env.MouseShiftDB.movementKeys.Q == nil, "choosing the default again removes the saved choice")
+
+ns.ResetMovementKeys()
+check(next(env.MouseShiftDB.movementKeys) == nil, "Defaults clears every choice")
+check(env.Layer(SHIFT)["SPACE"] == "ACTIONBUTTON40" and env.Layer(SHIFT)["Q"] == nil, "Defaults restores the default layers")
+
 print(("%d passed, %d failed"):format(passed, failures))
 if failures > 0 then
     os.exit(1)

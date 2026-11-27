@@ -54,6 +54,20 @@ for action in pairs(HELD_MOVEMENT) do
     EXCLUDED_ACTIONS[action] = true
 end
 
+-- Keys bound to these actions are listed in the Movement protection window.
+-- Each one can be protected (never taken over by a layer) or free. By
+-- default, keys for held movement are protected and the jump key is free.
+-- The order is the order of the list. Mouse steering is not listed: it is
+-- always protected.
+local MOVEMENT_ORDER = {
+    "MOVEFORWARD", "MOVEBACKWARD", "TURNLEFT", "TURNRIGHT", "STRAFELEFT",
+    "STRAFERIGHT", "JUMP", "PITCHUP", "PITCHDOWN",
+}
+local MOVEMENT_RANK = {}
+for index, action in ipairs(MOVEMENT_ORDER) do
+    MOVEMENT_RANK[action] = index
+end
+
 -- Keys that are never taken over: the main mouse buttons and Escape.
 local EXCLUDED_KEYS = {
     BUTTON1 = true,
@@ -250,6 +264,16 @@ local function InitDatabase()
     if type(MouseShiftDB.minimap.minimapPos) ~= "number" then
         MouseShiftDB.minimap.minimapPos = 220
     end
+    -- Movement protection choices that differ from the default, per key:
+    -- true = protected, false = free.
+    if type(MouseShiftDB.movementKeys) ~= "table" then
+        MouseShiftDB.movementKeys = {}
+    end
+    for key, protected in pairs(MouseShiftDB.movementKeys) do
+        if type(key) ~= "string" or type(protected) ~= "boolean" then
+            MouseShiftDB.movementKeys[key] = nil
+        end
+    end
     ns.db = MouseShiftDB
 end
 
@@ -334,29 +358,140 @@ local triggerOwner = CreateFrame("Frame")
 ---------------------------------------------------------------------------
 
 ns.layers = {}
+ns.skipped = {}
 
 -- Returns an ordered list of { key = "2", action = "ACTIONBUTTON8" } entries
 -- for one layer.
+---------------------------------------------------------------------------
+-- Movement protection
+---------------------------------------------------------------------------
+
+-- The movement action a key performs, or nil. Reads the binding in effect,
+-- including the overrides of action bar addons.
+local function MovementActionOf(key)
+    local action = GetBindingAction(key, true)
+    if action and MOVEMENT_RANK[action] then
+        return action
+    end
+    return nil
+end
+
+local function DefaultProtected(action)
+    return HELD_MOVEMENT[action] == true
+end
+
+-- True when a layer must leave this key alone.
+function ns.IsKeyProtected(key)
+    -- Steering with the mouse is always protected and never listed.
+    if MOUSE_CONTROL_ACTIONS[GetBindingAction(key, true) or ""] then
+        return true
+    end
+    local action = MovementActionOf(key)
+    if not action then
+        return false
+    end
+    local choice = ns.db and ns.db.movementKeys[key]
+    if choice ~= nil then
+        return choice
+    end
+    return DefaultProtected(action)
+end
+
+function ns.SetKeyProtected(key, protected)
+    if InCombatLockdown() or not ns.db then
+        return false
+    end
+    local action = MovementActionOf(key)
+    if action and DefaultProtected(action) == protected then
+        ns.db.movementKeys[key] = nil
+    else
+        ns.db.movementKeys[key] = protected and true or false
+    end
+    return ns.Apply()
+end
+
+function ns.ResetMovementKeys()
+    if InCombatLockdown() or not ns.db then
+        return false
+    end
+    wipe(ns.db.movementKeys)
+    return ns.Apply()
+end
+
+-- The Shift, Ctrl and Alt keybinds on a key: { { combo, action }, ... }.
+local function ModifiedBindings(key)
+    local result = {}
+    for mask = 1, 7 do
+        local combo = PrefixForMask(mask) .. key
+        local action = GetBindingAction(combo, true)
+        if action and action ~= "" and not EXCLUDED_ACTIONS[action] and not action:find("MouseShiftDriver", 1, true) then
+            result[#result + 1] = { combo = combo, action = action }
+        end
+    end
+    return result
+end
+
+-- Every key that moves the character, in list order:
+-- { key, action, protected, isDefault, bindings }.
+function ns.GetMovementKeys()
+    local seen, list = {}, {}
+    for index = 1, GetNumBindings() do
+        local results = { GetBinding(index) }
+        for i = 2, #results do
+            local key = results[i]
+            if type(key) == "string" and not seen[key] and not HasModifier(key)
+                and not EXCLUDED_KEYS[key] and not IsMainMouseButton(key) then
+                seen[key] = true
+                local action = MovementActionOf(key)
+                if action then
+                    list[#list + 1] = {
+                        key = key,
+                        action = action,
+                        protected = ns.IsKeyProtected(key),
+                        isDefault = ns.db.movementKeys[key] == nil,
+                        bindings = ModifiedBindings(key),
+                    }
+                end
+            end
+        end
+    end
+    table.sort(list, function(a, b)
+        if a.action ~= b.action then
+            return MOVEMENT_RANK[a.action] < MOVEMENT_RANK[b.action]
+        end
+        return a.key < b.key
+    end)
+    return list
+end
+
+---------------------------------------------------------------------------
+-- Layers
+---------------------------------------------------------------------------
+
+-- Returns the layer for one combination of modifiers, and the keys it had
+-- to skip because they are protected movement keys.
 local function CollectLayer(mask, triggerKeys)
     local prefix = PrefixForMask(mask)
-    local found = {}
+    local found, skipped = {}, {}
 
     local function consider(combo)
         if type(combo) ~= "string" or combo:sub(1, #prefix) ~= prefix then
             return
         end
         local base = combo:sub(#prefix + 1)
-        if base == "" or found[base] or EXCLUDED_KEYS[base] or IsMainMouseButton(base) or triggerKeys[base] or HasModifier(base) then
-            return
-        end
-        -- A key that moves the character keeps moving it on every layer.
-        if HELD_MOVEMENT[GetBindingAction(base, true) or ""] then
+        if base == "" or found[base] or skipped[base] or EXCLUDED_KEYS[base] or IsMainMouseButton(base) or triggerKeys[base] or HasModifier(base) then
             return
         end
         local action = GetBindingAction(combo, true)
-        if action and action ~= "" and not EXCLUDED_ACTIONS[action] and not action:find("MouseShiftDriver", 1, true) then
-            found[base] = action
+        if not action or action == "" or EXCLUDED_ACTIONS[action] or action:find("MouseShiftDriver", 1, true) then
+            return
         end
+        -- A protected key keeps moving the character on every layer.
+        if ns.IsKeyProtected(base) then
+            skipped[base] = action
+            return
+        end
+        found[base] = action
     end
 
     -- Bindings listed in the key binding interface.
@@ -372,12 +507,15 @@ local function CollectLayer(mask, triggerKeys)
         consider(prefix .. key)
     end
 
-    local layer = {}
-    for key, action in pairs(found) do
-        layer[#layer + 1] = { key = key, action = action }
+    local function sorted(map)
+        local list = {}
+        for key, action in pairs(map) do
+            list[#list + 1] = { key = key, action = action }
+        end
+        table.sort(list, function(a, b) return a.key < b.key end)
+        return list
     end
-    table.sort(layer, function(a, b) return a.key < b.key end)
-    return layer
+    return sorted(found), sorted(skipped)
 end
 
 -- Builds every layer whose modifiers all have a trigger assigned.
@@ -392,13 +530,13 @@ local function CollectAllLayers()
         end
     end
 
-    local layers = {}
+    local layers, skipped = {}, {}
     for mask = 1, 7 do
         if bit.band(mask, availableBits) == mask then
-            layers[mask] = CollectLayer(mask, triggerKeys)
+            layers[mask], skipped[mask] = CollectLayer(mask, triggerKeys)
         end
     end
-    return layers
+    return layers, skipped
 end
 
 local function Signature(layers)
@@ -479,7 +617,8 @@ function ns.Apply()
     end
     rebuildPending = false
 
-    local layers = CollectAllLayers()
+    local layers, skipped = CollectAllLayers()
+    ns.skipped = skipped
     local signature = Signature(layers)
     if signature == lastSignature then
         -- Nothing changed. Returning here also keeps the UPDATE_BINDINGS
@@ -631,6 +770,12 @@ function ns.SetTrigger(modifier, key)
     return ns.Apply()
 end
 
+-- The layer of a single modifier and the keys it skipped.
+function ns.LayerFor(modifier)
+    local mask = MODIFIER_BIT[modifier]
+    return ns.layers[mask] or {}, ns.skipped[mask] or {}
+end
+
 -- Number of keys mirrored for a single modifier.
 function ns.LayerSize(modifier)
     local layer = ns.layers[MODIFIER_BIT[modifier]]
@@ -714,6 +859,14 @@ local function PrintLayers()
             print(("  %s layer: %d keys"):format(prefix, #layer))
             for _, entry in ipairs(layer) do
                 print(("    %s -> %s"):format(entry.key, ns.ActionDisplayName(entry.action)))
+            end
+            local skipped = ns.skipped[mask]
+            if skipped and #skipped > 0 then
+                local keys = {}
+                for _, entry in ipairs(skipped) do
+                    keys[#keys + 1] = ns.KeyDisplayName(entry.key)
+                end
+                print(("    |cffff9a4dskipped, protected movement keys: %s|r"):format(table.concat(keys, ", ")))
             end
         end
     end
