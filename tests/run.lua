@@ -23,10 +23,10 @@ local SHIFT, CTRL, ALT = 1, 2, 4
 local bindings = {
     ["W"] = "MOVEFORWARD",
     ["S"] = "MOVEBACKWARD",
-    ["A"] = "STRAFELEFT",
-    ["D"] = "STRAFERIGHT",
-    ["Q"] = "TURNLEFT",
-    ["E"] = "TURNRIGHT",
+    ["A"] = "TURNLEFT",
+    ["D"] = "TURNRIGHT",
+    ["Q"] = "STRAFELEFT",
+    ["E"] = "STRAFERIGHT",
     ["SPACE"] = "JUMP",
     ["1"] = "ACTIONBUTTON1",
     ["2"] = "ACTIONBUTTON2",
@@ -40,6 +40,7 @@ local bindings = {
 
     ["CTRL-W"] = "ACTIONBUTTON30",   -- 0.3.2: W must not be taken over
     ["SHIFT-A"] = "ACTIONBUTTON31",  -- 0.3.2: A must not be taken over
+    ["SHIFT-Q"] = "ACTIONBUTTON32",  -- Q strafes by default: not taken over
     ["SHIFT-SPACE"] = "ACTIONBUTTON40", -- 0.3.3: Space must work again
     ["CTRL-SPACE"] = "ACTIONBUTTON41",
     ["ALT-SPACE"] = "ACTIONBUTTON42",
@@ -61,6 +62,7 @@ check(env.Layer(SHIFT + CTRL)["1"] == "ACTIONBUTTON10", "Ctrl-Shift-1 reaches 1 
 print("-- Walking keys stay walking keys (0.3.2)")
 check(ctrl["W"] == nil, "Ctrl-W does not take over W")
 check(shift["A"] == nil, "Shift-A does not take over A")
+check(shift["Q"] == nil, "Shift-Q does not take over Q while Q strafes")
 
 print("-- Jump key stays available (0.3.3)")
 check(shift["SPACE"] == "ACTIONBUTTON40", "Shift-Space reaches Space")

@@ -20,6 +20,10 @@ Unit frames (your own, party, raid and target frames) take mouse buttons 4 and 5
 
 Fixed in version 0.3.2. It happened when a movement key also had a Shift, Ctrl or Alt keybind, such as `Ctrl-W`, and you pressed the MouseShift button while walking. Update to the latest version. Walking keys now always move your character, and their modifier keybinds are reached with the real modifier key.
 
+## Shift-Q, Ctrl-E or another keybind on a movement key does nothing
+
+Keys that walk, strafe or turn your character are never taken over by MouseShift, so your character can never keep walking by accident. With the game's default keys these are `W`, `A`, `S`, `D`, `Q`, `E` and the arrow keys. Their Shift, Ctrl and Alt keybinds work with the real modifier key. If you use `Q` and `E` for spells instead of strafing, rebind them in the game's key bindings and MouseShift reaches their keybinds again.
+
 ## Shift-Space or Ctrl-Space stopped working in 0.3.2
 
 Version 0.3.2 also kept the jump key out of every layer, which was not needed. Fixed in version 0.3.3: update to the latest version.

@@ -5,7 +5,7 @@ Version numbers: fixes raise the last number (0.1.1), feature releases raise the
 ## 0.3.3
 
 - Fixed: since 0.3.2, keybinds on the jump key, such as `Shift-Space` or `Ctrl-Space`, no longer worked with MouseShift. The jump key is available to layers again.
-- The fix from 0.3.2 stays: keys that walk or turn your character, such as `W`, `A`, `S` and `D`, are still never taken over, so your character never keeps walking by accident.
+- The fix from 0.3.2 stays: keys that walk, strafe or turn your character are still never taken over, so your character never keeps walking by accident. With the game's default keys these are `W`, `A`, `S`, `D`, `Q`, `E` and the arrow keys. A Shift, Ctrl or Alt keybind on one of them, such as `Shift-Q`, still works with the real modifier key. Version 0.4 will add an option to turn this protection off.
 
 ## 0.3.2
 
