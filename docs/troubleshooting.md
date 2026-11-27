@@ -18,7 +18,11 @@ Unit frames (your own, party, raid and target frames) take mouse buttons 4 and 5
 
 ## My character keeps walking after I release W
 
-Fixed in version 0.3.2. It happened when a movement key also had a Shift, Ctrl or Alt keybind, such as `Ctrl-W`, and you pressed the MouseShift button while walking. Update to the latest version. Movement keys now always move your character, and their modifier keybinds are reached with the real modifier key.
+Fixed in version 0.3.2. It happened when a movement key also had a Shift, Ctrl or Alt keybind, such as `Ctrl-W`, and you pressed the MouseShift button while walking. Update to the latest version. Walking keys now always move your character, and their modifier keybinds are reached with the real modifier key.
+
+## Shift-Space or Ctrl-Space stopped working in 0.3.2
+
+Version 0.3.2 also kept the jump key out of every layer, which was not needed. Fixed in version 0.3.3: update to the latest version.
 
 ## Quick Keybind Mode saves the plain key
 

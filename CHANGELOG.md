@@ -2,6 +2,11 @@
 
 Version numbers: fixes raise the last number (0.1.1), feature releases raise the middle number (0.2.0), and 1.0.0 will be the first stable release.
 
+## 0.3.3
+
+- Fixed: since 0.3.2, keybinds on the jump key, such as `Shift-Space` or `Ctrl-Space`, no longer worked with MouseShift. The jump key is available to layers again.
+- The fix from 0.3.2 stays: keys that walk or turn your character, such as `W`, `A`, `S` and `D`, are still never taken over, so your character never keeps walking by accident.
+
 ## 0.3.2
 
 - Fixed: pressing the assigned button while walking could leave the character walking after the movement key was released. This happened when a movement key, such as `W`, also had a Shift, Ctrl or Alt keybind (for example `Ctrl-W`): the layer took the key over while it was held, so the game never saw it released for movement.

@@ -26,15 +26,12 @@ local MODIFIER_BIT = { SHIFT = 1, CTRL = 2, ALT = 4 }
 -- The game writes modifiers in this order: ALT-CTRL-SHIFT-key.
 local PREFIX_ORDER = { "ALT", "CTRL", "SHIFT" }
 
--- Actions that start on key press and stop on key release. A key's release
--- goes to whatever the key is bound to at that moment, so a layer must never
--- change the binding of a key while such an action may be running:
--- - these actions are never put on a key by a layer, or releasing the trigger
---   before the key would leave the character moving;
--- - keys bound to these actions are never taken over by a layer, or pressing
---   the trigger while walking would send the key's release to the layer's
---   action and the character would keep walking.
-local EXCLUDED_ACTIONS = {
+-- Movement that runs for as long as its key is held. A key's release goes to
+-- whatever the key is bound to at that moment, so a key bound to one of these
+-- is never taken over by a layer: pressing the trigger while walking would
+-- send the key's release to the layer's action and the character would keep
+-- walking.
+local HELD_MOVEMENT = {
     MOVEFORWARD = true,
     MOVEBACKWARD = true,
     STRAFELEFT = true,
@@ -44,10 +41,18 @@ local EXCLUDED_ACTIONS = {
     MOVEANDSTEER = true,
     PITCHUP = true,
     PITCHDOWN = true,
-    JUMP = true,
     CAMERAORSELECTORMOVE = true,
     TURNORACTION = true,
 }
+
+-- Actions that are never put on a key by a layer, or releasing the trigger
+-- before the key would leave the character moving. Jump is one of them, but
+-- the jump key itself stays available to layers: a jump is over at once, and
+-- Shift-Space or Ctrl-Space are popular keybinds.
+local EXCLUDED_ACTIONS = { JUMP = true }
+for action in pairs(HELD_MOVEMENT) do
+    EXCLUDED_ACTIONS[action] = true
+end
 
 -- Keys that are never taken over: the main mouse buttons and Escape.
 local EXCLUDED_KEYS = {
@@ -345,7 +350,7 @@ local function CollectLayer(mask, triggerKeys)
             return
         end
         -- A key that moves the character keeps moving it on every layer.
-        if EXCLUDED_ACTIONS[GetBindingAction(base, true) or ""] then
+        if HELD_MOVEMENT[GetBindingAction(base, true) or ""] then
             return
         end
         local action = GetBindingAction(combo, true)
