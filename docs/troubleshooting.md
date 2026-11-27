@@ -22,7 +22,9 @@ Fixed in version 0.3.2. It happened when a movement key also had a Shift, Ctrl o
 
 ## Shift-Q, Ctrl-E or another keybind on a movement key does nothing
 
-Keys that walk, strafe or turn your character are never taken over by MouseShift, so your character can never keep walking by accident. With the game's default keys these are `W`, `A`, `S`, `D`, `Q`, `E` and the arrow keys. Their Shift, Ctrl and Alt keybinds work with the real modifier key. If you use `Q` and `E` for spells instead of strafing, rebind them in the game's key bindings and MouseShift reaches their keybinds again.
+The key is a protected movement key: it always moves your character, and its Shift, Ctrl and Alt keybinds work with the real modifier key. With the game's default keys these are `W`, `A`, `S`, `D`, `Q`, `E` and the arrow keys. Point at the number of bindings next to a field to see which keys a layer skips.
+
+To use such a keybind with MouseShift, open **Movement protection** in the settings window and untick the key. See [How it works](how-it-works.md#movement-protection) for what that changes.
 
 ## Shift-Space or Ctrl-Space stopped working in 0.3.2
 

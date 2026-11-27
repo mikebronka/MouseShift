@@ -13,6 +13,8 @@ Hold the button under your thumb, press `2`, and the game does whatever you have
 - Hold two buttons together for combinations such as `Ctrl-Shift`.
 - Assign a button by pressing it. No need to know whether your thumb button is Button 4 or Button 5.
 - Works in combat.
+- You choose which movement keys stay protected, so your character never keeps walking by accident.
+- Tooltips explain every field and option.
 - Works with mouseover casting on your own, party and raid frames, from the game or from unit frame addons.
 - Uses your existing Shift, Ctrl and Alt keybinds. Nothing to rebind.
 - Works with the default action bars and with action bar addons such as ElvUI.

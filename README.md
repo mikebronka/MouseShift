@@ -21,6 +21,8 @@ Hold the button under your thumb, press `2`, and the game does whatever you have
 - Assign a button by pressing it. No need to know whether your thumb button is Button 4 or Button 5.
 - Works with MMO mice whose side buttons send keyboard keys, such as the Razer Naga: any key can be a modifier too.
 - Works in combat.
+- You choose which movement keys stay protected, so your character never keeps walking by accident.
+- Tooltips explain every field and option, and show which keys each layer uses.
 - Works with mouseover casting on your own, party and raid frames, from the game or from unit frame addons.
 - Uses your existing SHIFT, CTRL and ALT bindings. Nothing to rebind.
 - Works with the default action bars and with action bar addons.
@@ -98,7 +100,7 @@ The side buttons of these mice usually send keyboard keys (`1`, `2`, `3`… or t
 - **Macro conditions.** The game does not see a real SHIFT key, so macros using `[mod:shift]`, `[mod:ctrl]` or `[mod:alt]` will not react to the mouse button. The same applies to action bar paging on a modifier key, and to setting keybinds in Quick Keybind Mode: hold the real modifier there.
 - **Clicks are not changed.** MouseShift works on key bindings, so Shift-click in the interface (linking an item in chat, Shift-click casting on raid frames with Clique or the game's click bindings) still needs the real Shift key.
 - **Mouse buttons 6 and higher over unit frames.** Unit frames keep mouse buttons for themselves. MouseShift lets the middle button and mouse buttons 4 and 5 through, but the game cannot do that for higher buttons. For mouseover casting on frames, use one of these three or a keyboard key as the modifier.
-- **Movement keys keep moving.** Keys that walk, strafe or turn your character (by default `W`, `A`, `S`, `D`, `Q`, `E` and the arrow keys) are never taken over by a layer, so your character never keeps walking by accident. A Shift, Ctrl or Alt keybind on one of them, such as `Ctrl-W`, still needs the real modifier key. The jump key is not affected: `Shift-Space` and similar keybinds work with MouseShift.
+- **Protected movement keys.** Keys that walk, strafe or turn your character (by default `W`, `A`, `S`, `D`, `Q`, `E` and the arrow keys) are protected: a layer never takes them over, so your character never keeps walking by accident, and their Shift, Ctrl and Alt keybinds need the real modifier key. Choose the keys in **Movement protection** in the settings window. A free movement key works with MouseShift, but pressing the MouseShift button while holding it can keep the movement going until you press the key again.
 - **Alt-Tab while holding a keyboard key.** If you release a key used as a modifier while the game window is not focused, its layer can stay on. Press the key once to fix it. Mouse buttons are checked automatically.
 - **Settings cannot be changed in combat.** The game blocks binding changes from addons during combat. Using MouseShift in combat works normally.
 
