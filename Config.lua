@@ -670,7 +670,7 @@ end
 -- Movement protection window
 ---------------------------------------------------------------------------
 
-local MOVEMENT_WIDTH = 300
+local MOVEMENT_WIDTH = 320
 local MOVEMENT_ROW_HEIGHT = 26
 local MOVEMENT_ROWS_TOP = 58
 
@@ -679,7 +679,7 @@ local function CreateMovementRow()
     check:SetSize(24, 24)
     check.keyText = movementFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     check.keyText:SetPoint("LEFT", check, "RIGHT", 4, 0)
-    check.keyText:SetWidth(80)
+    check.keyText:SetWidth(100)
     check.keyText:SetJustifyH("LEFT")
     check.actionText = movementFrame:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
     check.actionText:SetPoint("LEFT", check.keyText, "RIGHT", 4, 0)

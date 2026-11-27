@@ -125,6 +125,56 @@ ns.ResetMovementKeys()
 check(next(env.MouseShiftDB.movementKeys) == nil, "Defaults clears every choice")
 check(env.Layer(SHIFT)["SPACE"] == "ACTIONBUTTON40" and env.Layer(SHIFT)["Q"] == nil, "Defaults restores the default layers")
 
+print("-- Settings window (smoke test)")
+local ui = load_env(bindings, { SHIFT = "BUTTON5", CTRL = "BUTTON4" }, { "Core.lua", "Config.lua" })
+local tip = ui.GameTooltip
+local function hover(target)
+    target._scripts.OnEnter(target)
+    return table.concat(tip.lines, "\n")
+end
+local okOpen, err = pcall(ui.ns.ToggleConfig)
+check(okOpen, "settings window opens" .. (okOpen and "" or (": " .. tostring(err))))
+local config = ui.MouseShiftConfig
+check(config and config:IsShown(), "settings window is shown")
+
+-- Find the frames with tooltips: hit layers and count areas.
+local function collect()
+    local list = {}
+    for _, frame in ipairs(ui.__frames or {}) do
+        if frame._scripts.OnEnter then list[#list + 1] = frame end
+    end
+    return list
+end
+local tooltips = {}
+for _, frame in ipairs(collect()) do
+    local okHover, text = pcall(hover, frame)
+    check(okHover, "tooltip works" .. (okHover and "" or (": " .. tostring(text))))
+    if okHover then tooltips[#tooltips + 1] = text end
+end
+local all = table.concat(tooltips, "\n---\n")
+check(all:find("Shift layer", 1, true) ~= nil, "layer tooltip shows the Shift layer")
+check(all:find("Skipped: protected movement keys", 1, true) ~= nil, "layer tooltip lists skipped keys")
+check(all:find("Movement protection", 1, true) ~= nil, "movement button has a tooltip")
+
+local okMove, moveErr = pcall(ui.ns.ToggleMovement)
+check(okMove, "movement window opens" .. (okMove and "" or (": " .. tostring(moveErr))))
+check(ui.MouseShiftMovement and ui.MouseShiftMovement:IsShown(), "movement window is shown")
+local rowTips = {}
+for _, frame in ipairs(collect()) do
+    local okHover, text = pcall(hover, frame)
+    if okHover and text:find("^Q: ") then rowTips.Q = text; rowTips.QFrame = frame end
+    if okHover and text:find("^SPACE: ") then rowTips.SPACE = text end
+end
+check(rowTips.Q and rowTips.Q:find("Protected (default)", 1, true), "Q row tooltip says protected by default")
+check(rowTips.SPACE and rowTips.SPACE:find("Your mouse button reaches", 1, true), "Space row tooltip shows what it gains")
+
+local okClick, clickErr = pcall(rowTips.QFrame._scripts.OnMouseUp, rowTips.QFrame, "LeftButton")
+check(okClick, "clicking the Q row works" .. (okClick and "" or (": " .. tostring(clickErr))))
+check(ui.MouseShiftDB.movementKeys.Q == false and not ui.ns.IsKeyProtected("Q"), "clicking the Q row frees Q")
+check(ui.Layer(SHIFT)["Q"] == "ACTIONBUTTON32", "after freeing Q, Shift-Q reaches Q")
+pcall(rowTips.QFrame._scripts.OnMouseUp, rowTips.QFrame, "RightButton")
+check(ui.MouseShiftDB.movementKeys.Q == false, "a right click on the row does nothing")
+
 print(("%d passed, %d failed"):format(passed, failures))
 if failures > 0 then
     os.exit(1)

@@ -2,6 +2,12 @@
 
 Version numbers: fixes raise the last number (0.1.1), feature releases raise the middle number (0.2.0), and 1.0.0 will be the first stable release.
 
+## 0.4.0
+
+- New: **Movement protection**. A button in the settings window opens a list of the keys that move your character, taken from your own key bindings. Tick a key to protect it: it always moves you, and MouseShift never changes what it does. Untick it to reach its Shift, Ctrl and Alt keybinds with MouseShift, for example `Shift-Q` when `Q` strafes. Walking, strafing and turning keys are protected by default, the jump key is free, as in 0.3.3.
+- New: tooltips. Point at a field, a button or an option to see what it does. Point at the number of bindings to see which keys a layer uses and which protected keys it skips, and why.
+- New: `/mouseshift list` also shows the keys each layer skips.
+
 ## 0.3.3
 
 - Fixed: since 0.3.2, keybinds on the jump key, such as `Shift-Space` or `Ctrl-Space`, no longer worked with MouseShift. The jump key is available to layers again.
