@@ -1,0 +1,26 @@
+name: Tests
+
+# Runs the regression tests on every push to main and before every release.
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_call:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Install Lua 5.1
+        run: sudo apt-get update && sudo apt-get install -y lua5.1
+
+      - name: Check syntax
+        run: for file in *.lua; do luac5.1 -p "$file" || exit 1; done
+
+      - name: Run regression tests
+        run: lua5.1 tests/run.lua

@@ -8,4 +8,5 @@ ignore:
   - .github
   - docs
   - README.md
+  - tests
   - wiki
