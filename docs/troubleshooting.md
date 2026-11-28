@@ -2,6 +2,10 @@
 
 [Documentation](README.md) › Troubleshooting
 
+## It works, then stops until /reload
+
+Type `/mouseshift status` the moment it stops, before `/reload`, and send the report (see [Still stuck?](#still-stuck)). The report shows whether another addon took over your button and what happened just before.
+
 ## Holding the button does nothing
 
 - Check that the button is assigned: `/mouseshift` should show it in the field.
@@ -81,4 +85,6 @@ Type `/mouseshift reset`, or click **Clear** on every field. To remove the addon
 
 ## Still stuck?
 
-Open an [issue on GitHub](https://github.com/mikebronka/MouseShift/issues/new/choose) with the output of `/mouseshift list` and any Lua error, or ask on [Discord](https://discord.gg/hmWdSxngaS).
+Type `/mouseshift status` while the problem is happening, before `/reload`. A window opens with a report: press Ctrl+C to copy it. Paste it into an [issue on GitHub](https://github.com/mikebronka/MouseShift/issues/new/choose), together with any Lua error, or into a message on [Discord](https://discord.gg/hmWdSxngaS).
+
+The report shows your buttons and what they are bound to right now, the layers, the movement keys, your addons and the last events. If another addon has taken over one of your buttons, it says so. After `/reload` the last report is also in `WTF\Account\<your account>\SavedVariables\MouseShift.lua`.

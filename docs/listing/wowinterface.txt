@@ -58,6 +58,7 @@ The side buttons of these mice usually send keyboard keys (1, 2, 3... or the num
 
 /mouseshift - open the settings window
 /mouseshift list - show which keys each layer uses
+/mouseshift status - a report to copy when something does not work
 /mouseshift minimap - show or hide the minimap button
 /mouseshift reset - clear all mouse buttons and keys
 

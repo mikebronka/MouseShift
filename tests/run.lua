@@ -239,6 +239,24 @@ check(ui.Layer(SHIFT)["Q"] == "ACTIONBUTTON32", "after freeing Q, Shift-Q reache
 pcall(rowTips.QFrame._scripts.OnMouseUp, rowTips.QFrame, "RightButton")
 check(ui.MouseShiftDB.movementKeys.Q and ui.MouseShiftDB.movementKeys.Q.protected == false, "a right click on the row does nothing")
 
+print("-- /mouseshift status (0.4.1)")
+local st = load_env(bindings, { SHIFT = "BUTTON5", CTRL = "BUTTON4" }, { "Core.lua", "Config.lua", "Debug.lua" })
+st.MouseShiftDriver._attr["active-mask"] = SHIFT
+st.MouseShiftDriver._scripts.OnClick(st.MouseShiftDriver, "SHIFT", true)
+st.MouseShiftDriver._attr["active-mask"] = 0
+local okStatus, statusErr = pcall(st.ns.ShowStatus)
+check(okStatus, "status window opens" .. (okStatus and "" or (": " .. tostring(statusErr))))
+local report = st.MouseShiftDB.lastReport or ""
+check(report:find("MouseShift status report", 1, true) ~= nil, "the report is saved for the SavedVariables file")
+check(report:find("SHIFT: BUTTON5 (BUTTON5), held: no, binding OK", 1, true) ~= nil, "the report checks the trigger binding")
+check(report:find("SHIFT pressed, layer SHIFT", 1, true) ~= nil, "trigger presses are in the event log")
+check(report:find("layers rebuilt: SHIFT", 1, true) ~= nil, "rebuilds are in the event log")
+check(report:find("skipped: A=ACTIONBUTTON31", 1, true) ~= nil, "skipped keys are in the report")
+check(st.MouseShiftStatus and st.MouseShiftStatus:IsShown(), "the status window is shown")
+st.overrides["BUTTON5"] = "CLICK BT4Button1:Keybind"
+st.ns.ShowStatus()
+check(st.MouseShiftDB.lastReport:find("PROBLEM, bound to: CLICK BT4Button1:Keybind", 1, true) ~= nil, "a button taken by another addon is reported")
+
 print(("%d passed, %d failed"):format(passed, failures))
 if failures > 0 then
     os.exit(1)

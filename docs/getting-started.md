@@ -66,6 +66,7 @@ Three ways to organise them that work well:
 | --- | --- |
 | `/mouseshift` | Open or close the settings window |
 | `/mouseshift list` | Show which keys each layer uses |
+| `/mouseshift status` | A report to copy when something does not work |
 | `/mouseshift minimap` | Show or hide the minimap button |
 | `/mouseshift reset` | Clear all mouse buttons and keys |
 | `/mouseshift help` | Show the commands |

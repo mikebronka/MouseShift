@@ -72,6 +72,7 @@ The side buttons of these mice usually send keyboard keys (`1`, `2`, `3`… or t
 
 - `/mouseshift` opens the settings window
 - `/mouseshift list` shows which keys each layer uses
+- `/mouseshift status` opens a report to copy when something does not work
 - `/mouseshift minimap` shows or hides the minimap button
 - `/mouseshift reset` clears all mouse buttons and keys
 

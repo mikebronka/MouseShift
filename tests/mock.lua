@@ -110,13 +110,39 @@ return function(bindings, triggers, files, movementKeys)
         NewTicker = function() return { Cancel = function() end } end,
     }
     env.SlashCmdList = {}
-    -- Override bindings, as the game reports them with checkOverride.
+    -- Override bindings, as the game reports them with checkOverride:
+    -- env.overrides stands for other addons, ownerOverrides for MouseShift's
+    -- own SetOverrideBinding calls.
+    local ownerOverrides = {}
+    local function ownerTable(owner)
+        ownerOverrides[owner] = ownerOverrides[owner] or {}
+        return ownerOverrides[owner]
+    end
+    env.SetOverrideBinding = function(owner, _, key, action)
+        ownerTable(owner)[key] = action
+    end
+    env.SetOverrideBindingClick = function(owner, _, key, name, button)
+        ownerTable(owner)[key] = "CLICK " .. name .. ":" .. (button or "LeftButton")
+    end
+    env.ClearOverrideBindings = function(owner)
+        ownerOverrides[owner] = nil
+    end
     env.GetBindingAction = function(key, checkOverride)
-        if checkOverride and env.overrides[key] then
-            return env.overrides[key]
+        if checkOverride then
+            if env.overrides[key] then
+                return env.overrides[key]
+            end
+            for _, list in pairs(ownerOverrides) do
+                if list[key] then
+                    return list[key]
+                end
+            end
         end
         return bindings[key] or ""
     end
+    env.date = os.date
+    env.GetBuildInfo = function() return "12.0.5", "60000", "Nov 1 2026", 120105 end
+    env.GetLocale = function() return "enUS" end
 
     local list = {}
     for key, action in pairs(bindings) do

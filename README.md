@@ -93,6 +93,7 @@ Point at a field, a button or a number for a tooltip. The number of bindings sho
 | --- | --- |
 | `/mouseshift` | Open or close the configuration window |
 | `/mouseshift list` | Show which keys each layer uses |
+| `/mouseshift status` | A report to copy when something does not work |
 | `/mouseshift minimap` | Show or hide the minimap button |
 | `/mouseshift reset` | Clear all mouse buttons and keys |
 | `/mouseshift help` | Show the commands |
@@ -129,7 +130,7 @@ MouseShift takes over that button while it is assigned. The configuration window
 
 ## Reporting problems
 
-Open an [issue](https://github.com/mikebronka/MouseShift/issues/new/choose). Please include the output of `/mouseshift list` and any Lua errors.
+Open an [issue](https://github.com/mikebronka/MouseShift/issues/new/choose). Please type `/mouseshift status` when the problem happens, before `/reload`, and paste the report, plus any Lua errors.
 
 Questions and feedback are welcome on [Discord](https://discord.gg/hmWdSxngaS).
 

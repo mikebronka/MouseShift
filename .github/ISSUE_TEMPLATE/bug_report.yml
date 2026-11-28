@@ -35,6 +35,13 @@ body:
       required: true
 
   - type: textarea
+    id: status
+    attributes:
+      label: Status report
+      description: Type /mouseshift status in game while the problem happens (before /reload), press Ctrl+C and paste it here.
+      render: text
+
+  - type: textarea
     id: errors
     attributes:
       label: Lua errors

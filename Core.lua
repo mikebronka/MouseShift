@@ -19,6 +19,26 @@ local ADDON_NAME, ns = ...
 
 ns.MODIFIERS = { "SHIFT", "CTRL", "ALT" }
 
+---------------------------------------------------------------------------
+-- Event log
+---------------------------------------------------------------------------
+
+-- The last events, kept in memory for /mouseshift status, so a report shows
+-- what happened just before something went wrong.
+local LOG_SIZE = 40
+local log = {}
+
+function ns.Log(text)
+    log[#log + 1] = date("%H:%M:%S") .. "  " .. text
+    if #log > LOG_SIZE then
+        table.remove(log, 1)
+    end
+end
+
+function ns.GetLog()
+    return log
+end
+
 -- Bit value of each modifier. A layer is identified by the sum of the bits
 -- of the modifiers it needs, so 1 = SHIFT, 3 = CTRL-SHIFT, 7 = ALT-CTRL-SHIFT.
 local MODIFIER_BIT = { SHIFT = 1, CTRL = 2, ALT = 4 }
@@ -386,6 +406,14 @@ driver:SetAttribute("_onclick", [=[
 -- Owns the bindings of the trigger buttons themselves.
 local triggerOwner = CreateFrame("Frame")
 
+-- Logs every press and release of a trigger. This runs after the secure
+-- snippet and only reads its result, so it changes nothing in combat.
+driver:HookScript("OnClick", function(self, modifier, down)
+    local active = self:GetAttribute("active-mask") or 0
+    ns.Log(("%s %s, layer %s"):format(modifier or "?", down and "pressed" or "released",
+        active == 0 and "off" or PrefixForMask(active):sub(1, -2)))
+end)
+
 ---------------------------------------------------------------------------
 -- Layer tables
 ---------------------------------------------------------------------------
@@ -475,6 +503,7 @@ function ns.SetKeyProtected(key, protected)
     if not action then
         return false
     end
+    ns.Log(("%s %s"):format(key, protected and "protected" or "freed"))
     if DefaultProtected(action) == protected then
         ns.db.movementKeys[key] = nil
     else
@@ -488,6 +517,7 @@ function ns.ResetMovementKeys()
         return false
     end
     wipe(ns.db.movementKeys)
+    ns.Log("movement protection reset to defaults")
     return ns.Apply()
 end
 
@@ -696,6 +726,9 @@ function ns.Apply()
         return false
     end
     if InCombatLockdown() then
+        if not rebuildPending then
+            ns.Log("keybinds changed in combat, rebuild after combat")
+        end
         rebuildPending = true
         return false
     end
@@ -711,6 +744,13 @@ function ns.Apply()
         return true
     end
     lastSignature = signature
+    local sizes = {}
+    for mask = 1, 7 do
+        if layers[mask] then
+            sizes[#sizes + 1] = PrefixForMask(mask):sub(1, -2) .. " " .. #layers[mask]
+        end
+    end
+    ns.Log("layers rebuilt: " .. (#sizes > 0 and table.concat(sizes, ", ") or "none"))
 
     ResetActiveLayer()
     -- Drop every override the driver owns, so nothing from an earlier
@@ -800,6 +840,7 @@ local function CheckStuckLayers()
         if button and not down and verified[button] then
             misses[modifier] = (misses[modifier] or 0) + 1
             if misses[modifier] >= MISSES_NEEDED then
+                ns.Log(("%s switched off: %s is no longer held"):format(modifier, button))
                 driver:SetAttribute("held-" .. modifier, nil)
                 misses[modifier] = nil
                 changed = true
@@ -826,6 +867,9 @@ local function ReleaseAllLayers()
     if InCombatLockdown() then
         return
     end
+    if (driver:GetAttribute("active-mask") or 0) ~= 0 then
+        ns.Log("loading screen: layer switched off")
+    end
     for _, modifier in ipairs(ns.MODIFIERS) do
         driver:SetAttribute("held-" .. modifier, nil)
     end
@@ -835,6 +879,33 @@ end
 
 function ns.IsApplyPending()
     return rebuildPending
+end
+
+-- The internal state, for /mouseshift status.
+function ns.GetState()
+    local held = {}
+    for _, modifier in ipairs(ns.MODIFIERS) do
+        held[modifier] = driver:GetAttribute("held-" .. modifier) and true or false
+    end
+    local trusted = {}
+    for button in pairs(verified) do
+        trusted[#trusted + 1] = button
+    end
+    table.sort(trusted)
+    return {
+        activeMask = driver:GetAttribute("active-mask") or 0,
+        held = held,
+        rebuildPending = rebuildPending,
+        verifiedButtons = trusted,
+        driverName = driver:GetName(),
+    }
+end
+
+function ns.LayerName(mask)
+    if mask == 0 then
+        return "none"
+    end
+    return PrefixForMask(mask):sub(1, -2)
 end
 
 function ns.SetTrigger(modifier, key)
@@ -852,6 +923,7 @@ function ns.SetTrigger(modifier, key)
         end
     end
     ns.db.triggers[modifier] = key
+    ns.Log(("%s set to %s"):format(modifier, key or "nothing"))
     return ns.Apply()
 end
 
@@ -905,6 +977,7 @@ events:RegisterEvent("ADDON_LOADED")
 events:RegisterEvent("PLAYER_LOGIN")
 events:RegisterEvent("UPDATE_BINDINGS")
 events:RegisterEvent("PLAYER_REGEN_ENABLED")
+events:RegisterEvent("PLAYER_REGEN_DISABLED")
 events:RegisterEvent("PLAYER_ENTERING_WORLD")
 events:SetScript("OnEvent", function(_, event, arg1)
     if event == "ADDON_LOADED" then
@@ -921,8 +994,12 @@ events:SetScript("OnEvent", function(_, event, arg1)
     elseif event == "UPDATE_BINDINGS" then
         RequestApply()
     elseif event == "PLAYER_ENTERING_WORLD" then
+        ns.Log("loading screen")
         ReleaseAllLayers()
+    elseif event == "PLAYER_REGEN_DISABLED" then
+        ns.Log("combat started")
     elseif event == "PLAYER_REGEN_ENABLED" then
+        ns.Log("combat ended")
         if rebuildPending then
             ns.Apply()
         end
@@ -981,10 +1058,15 @@ SlashCmdList.MOUSESHIFT = function(input)
             ns.SetMinimapButtonShown(show)
             ns.Print(show and "Minimap button shown." or "Minimap button hidden. Type /mouseshift minimap to show it again.")
         end
+    elseif command == "status" then
+        if ns.ShowStatus then
+            ns.ShowStatus()
+        end
     elseif command == "help" then
         ns.Print("commands:")
         print("  /mouseshift - open the settings window")
         print("  /mouseshift list - show which keys each layer uses")
+        print("  /mouseshift status - a report to copy when something does not work")
         print("  /mouseshift minimap - show or hide the minimap button")
         print("  /mouseshift reset - clear all mouse buttons and keys")
     else
