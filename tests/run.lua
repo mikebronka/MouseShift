@@ -183,6 +183,12 @@ check(ns.ActionDisplayName("CLICK DominosActionButton7:HOTKEY") == "Dominos butt
 check(ns.ActionDisplayName("CLICK SomeAddonButton:LeftButton") == "SomeAddonButton", "other clicks show the frame name")
 check(ns.ActionDisplayName("ACTIONBUTTON1") == "ACTIONBUTTON1", "a binding without a game name is shown as it is")
 
+print("-- Key names (0.4)")
+check(ns.KeyDisplayName("SHIFT-Q") == "Shift-Q", "Shift is written out")
+check(ns.KeyDisplayName("ALT-CTRL-SHIFT-1") == "Alt-Ctrl-Shift-1", "several modifiers are written out")
+check(ns.KeyDisplayName("Q") == "Q", "a plain key stays as it is")
+check(ns.KeyDisplayName("SHIFT-") == "SHIFT-", "a key name that is only a prefix does not break")
+
 print("-- Settings window (smoke test)")
 local ui = load_env(bindings, { SHIFT = "BUTTON5", CTRL = "BUTTON4" }, { "Core.lua", "Config.lua" })
 local tip = ui.GameTooltip

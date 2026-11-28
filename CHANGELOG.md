@@ -8,6 +8,7 @@ Version numbers: fixes raise the last number (0.1.1), feature releases raise the
 - New: tooltips. Point at a field, a button or an option to see what it does. Point at the number of bindings to see which keys a layer uses and which protected keys it skips, and why.
 - New: `/mouseshift list` also shows the keys each layer skips.
 - Buttons of action bar addons show readable names in tooltips and in `/mouseshift list`, for example "Bartender button 13" instead of "CLICK BT4Button13:Keybind".
+- Keybinds with modifiers are written out in tooltips, for example "Shift-Spacebar" instead of "s-Spacebar".
 
 ## 0.3.3
 

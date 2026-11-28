@@ -175,7 +175,20 @@ function ns.MouseButtonToKey(button)
 end
 
 -- Localized key name from the game, for example "Mouse Button 4".
+-- Modifier prefixes in key names, written out. The game abbreviates them
+-- ("s-Spacebar"), which reads poorly in a tooltip.
+local MODIFIER_PREFIXES = {
+    { prefix = "ALT-", name = "Alt" },
+    { prefix = "CTRL-", name = "Ctrl" },
+    { prefix = "SHIFT-", name = "Shift" },
+}
+
 function ns.KeyDisplayName(key)
+    for _, modifier in ipairs(MODIFIER_PREFIXES) do
+        if key:sub(1, #modifier.prefix) == modifier.prefix and #key > #modifier.prefix then
+            return modifier.name .. "-" .. ns.KeyDisplayName(key:sub(#modifier.prefix + 1))
+        end
+    end
     local text = _G["KEY_" .. key]
     if (not text or text == "") and GetBindingText then
         text = GetBindingText(key, "KEY_")
