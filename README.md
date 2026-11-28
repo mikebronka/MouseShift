@@ -75,6 +75,18 @@ The left and right mouse buttons cannot be used, because the game needs them for
 
 Hold two assigned buttons together to reach your `CTRL-SHIFT`, `ALT-SHIFT` or `ALT-CTRL` bindings, or all three for `ALT-CTRL-SHIFT`.
 
+### Movement protection
+
+Keys that move your character are protected by default: they always move you, so your character never keeps walking by accident. Click **Movement protection...** to choose the keys yourself. Untick a key, and the assigned button reaches its Shift, Ctrl and Alt keybinds, while the key alone still moves you.
+
+![The Movement protection window next to the settings window](docs/images/movement-protection.png)
+
+Point at a field, a button or a number for a tooltip. The number of bindings shows which keys a layer uses and which it skips.
+
+| Which keys a layer uses and skips | What freeing a key changes |
+| --- | --- |
+| ![Tooltip with the keys of the Shift layer](docs/images/layer-tooltip.png) | ![Tooltip of a movement key](docs/images/key-tooltip.png) |
+
 ### Commands
 
 | Command | What it does |

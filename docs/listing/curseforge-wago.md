@@ -39,6 +39,14 @@ Hold the button under your thumb, press `2`, and the game does whatever you have
 
 &nbsp;
 
+### Movement protection
+
+Keys that move your character stay protected by default, so you never keep walking by accident. Untick a key in **Movement protection** and your mouse button reaches its Shift keybind too, for example Shift-Q for your pet attack while Q still strafes.
+
+![The Movement protection window](https://raw.githubusercontent.com/mikebronka/MouseShift/main/docs/images/movement-protection.png)
+
+&nbsp;
+
 ### MMO mice (Razer Naga, Logitech G600, Corsair Scimitar and similar)
 
 The side buttons of these mice usually send keyboard keys (`1`, `2`, `3`… or the numpad), not mouse buttons. MouseShift handles them like any other key:

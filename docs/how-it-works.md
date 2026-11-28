@@ -58,6 +58,10 @@ The **Movement protection** button in the settings window opens a list of the ke
 
 By default, keys that walk, strafe or turn are protected and the jump key is free. **Defaults** brings that back. Pointing at a key shows which keybinds you gain by freeing it. Steering with a mouse button is always protected and not listed.
 
+![The Movement protection window next to the settings window](images/movement-protection.png)
+
+![Tooltip of a free movement key](images/key-tooltip.png)
+
 ## Unit frames
 
 Unit frames, the player, party, raid and target frames from the game or from addons, take every mouse button pressed over them, including mouse buttons 4 and 5. A modifier on such a button would then never arrive while the cursor is over a frame, which breaks mouseover casting on frames.
