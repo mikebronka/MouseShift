@@ -11,7 +11,7 @@ local ADDON_NAME, ns = ...
 
 local L = {
     TITLE = "MouseShift status",
-    HINT = "Press Ctrl+C to copy the report, then paste it into your message.",
+    HINT = "Press Ctrl+C (Cmd+C on a Mac) to copy the report, then paste it into your message.",
 }
 
 local statusFrame
@@ -53,7 +53,7 @@ function ns.BuildStatusReport()
     add(("MouseShift: %s"):format(ns.GetVersion()))
     add(("Game: %s (build %s, interface %s), %s"):format(tostring(version), tostring(build),
         tostring(interface), tostring(GetLocale and GetLocale() or "?")))
-    add(("In combat: %s. Rebuild waiting for combat to end: %s"):format(
+    add(("In combat: %s. Bindings to check again after combat: %s"):format(
         YesNo(InCombatLockdown()), YesNo(state.rebuildPending)))
     add("")
 
@@ -66,14 +66,29 @@ function ns.BuildStatusReport()
             local expected = ("CLICK %s:%s"):format(state.driverName, modifier)
             local actual = GetBindingAction(key, true) or ""
             local check = actual == expected and "OK" or ("PROBLEM, bound to: " .. (actual ~= "" and actual or "nothing"))
-            add(("  %s: %s (%s), held: %s, binding %s"):format(modifier, key, ns.KeyDisplayName(key),
-                YesNo(state.held[modifier]), check))
+            local button = ns.KeyToMouseButton(key)
+            local physical = ""
+            if button and IsMouseButtonDown then
+                physical = ", physically down: " .. YesNo(IsMouseButtonDown(button))
+            end
+            add(("  %s: %s (%s), held: %s%s, binding %s"):format(modifier, key, ns.KeyDisplayName(key),
+                YesNo(state.held[modifier]), physical, check))
         end
     end
     if not any then
         add("  none")
     end
     add(("Layer on now: %s"):format(ns.LayerName(state.activeMask)))
+    if state.activeMask ~= 0 then
+        local wrong = {}
+        for _, entry in ipairs(ns.layers[state.activeMask] or {}) do
+            local actual = GetBindingAction(entry.key, true) or ""
+            if actual ~= entry.action then
+                wrong[#wrong + 1] = ("%s is %s, should be %s"):format(entry.key, actual ~= "" and actual or "nothing", entry.action)
+            end
+        end
+        add("  Layer keys bound as expected: " .. (#wrong == 0 and "yes" or ("NO: " .. table.concat(wrong, "; "))))
+    end
     add(("Mouse buttons seen held: %s"):format(#state.verifiedButtons > 0 and table.concat(state.verifiedButtons, ", ") or "none"))
     add("")
 
@@ -118,6 +133,11 @@ function ns.BuildStatusReport()
     end
     add("")
 
+    if ns.GetPassThroughState then
+        local pass = ns.GetPassThroughState()
+        add(("Unit frames: mouse buttons passed through: %s, on %d frames, update waiting for combat to end: %s"):format(
+            #pass.buttons > 0 and table.concat(pass.buttons, ", ") or "none", pass.frames, YesNo(pass.pending)))
+    end
     add(("Minimap button: %s"):format(ns.IsMinimapButtonShown and YesNo(ns.IsMinimapButtonShown()) or "?"))
     add("")
 
@@ -126,12 +146,20 @@ function ns.BuildStatusReport()
     add("  " .. (#addons > 0 and table.concat(addons, ", ") or "none found"))
     add("")
 
+    local log, pressLog = ns.GetLog()
     add("Last events:")
-    local log = ns.GetLog()
     for _, entry in ipairs(log) do
         add("  " .. entry)
     end
     if #log == 0 then
+        add("  none")
+    end
+    add("")
+    add("Last presses of the assigned buttons:")
+    for _, entry in ipairs(pressLog) do
+        add("  " .. entry)
+    end
+    if #pressLog == 0 then
         add("  none")
     end
 
@@ -196,7 +224,11 @@ function ns.ShowStatus()
     statusFrame:Show()
     statusFrame:Raise()
     statusFrame.edit:SetText(report)
-    statusFrame.edit:SetFocus()
-    statusFrame.edit:HighlightText()
+    -- Out of combat the report is selected, ready to copy. In combat it does
+    -- not take the keyboard, so keys keep working: click it to select.
+    if not InCombatLockdown() then
+        statusFrame.edit:SetFocus()
+        statusFrame.edit:HighlightText()
+    end
     ns.Print("Status report ready. It is also saved to MouseShift.lua in your SavedVariables folder after /reload.")
 end

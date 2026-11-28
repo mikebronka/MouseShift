@@ -24,19 +24,30 @@ ns.MODIFIERS = { "SHIFT", "CTRL", "ALT" }
 ---------------------------------------------------------------------------
 
 -- The last events, kept in memory for /mouseshift status, so a report shows
--- what happened just before something went wrong.
+-- what happened just before something went wrong. Presses of the assigned
+-- buttons have a short list of their own, so they never push the other
+-- events out.
 local LOG_SIZE = 40
-local log = {}
+local PRESS_LOG_SIZE = 12
+local log, pressLog = {}, {}
 
-function ns.Log(text)
-    log[#log + 1] = date("%H:%M:%S") .. "  " .. text
-    if #log > LOG_SIZE then
-        table.remove(log, 1)
+local function AddLine(list, size, text)
+    list[#list + 1] = date("%H:%M:%S") .. "  " .. text
+    if #list > size then
+        table.remove(list, 1)
     end
 end
 
+function ns.Log(text)
+    AddLine(log, LOG_SIZE, text)
+end
+
+function ns.LogPress(text)
+    AddLine(pressLog, PRESS_LOG_SIZE, text)
+end
+
 function ns.GetLog()
-    return log
+    return log, pressLog
 end
 
 -- Bit value of each modifier. A layer is identified by the sum of the bits
@@ -410,7 +421,7 @@ local triggerOwner = CreateFrame("Frame")
 -- snippet and only reads its result, so it changes nothing in combat.
 driver:HookScript("OnClick", function(self, modifier, down)
     local active = self:GetAttribute("active-mask") or 0
-    ns.Log(("%s %s, layer %s"):format(modifier or "?", down and "pressed" or "released",
+    ns.LogPress(("%s %s, layer %s"):format(modifier or "?", down and "pressed" or "released",
         active == 0 and "off" or PrefixForMask(active):sub(1, -2)))
 end)
 
@@ -727,7 +738,7 @@ function ns.Apply()
     end
     if InCombatLockdown() then
         if not rebuildPending then
-            ns.Log("keybinds changed in combat, rebuild after combat")
+            ns.Log("bindings changed in combat (layer switches do this too), check again after combat")
         end
         rebuildPending = true
         return false
@@ -1050,6 +1061,7 @@ SlashCmdList.MOUSESHIFT = function(input)
         for _, modifier in ipairs(ns.MODIFIERS) do
             ns.db.triggers[modifier] = nil
         end
+        ns.Log("all buttons and keys cleared with /mouseshift reset")
         ns.Apply()
         ns.Print("All mouse buttons and keys cleared.")
     elseif command == "minimap" then

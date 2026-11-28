@@ -4,7 +4,7 @@ Version numbers: fixes raise the last number (0.1.1), feature releases raise the
 
 ## 0.4.1
 
-- New: `/mouseshift status` opens a report to copy when something does not work: your buttons and what they are bound to right now, the layers, movement protection, loaded addons and the last 40 events (presses, rebuilds, combat, loading screens). It also flags when another addon has taken over an assigned button. The last report is kept in MouseShift's saved variables file after `/reload`.
+- New: `/mouseshift status` opens a report to copy when something does not work: your buttons and what they are bound to right now, the layers, movement protection, loaded addons, the last 40 events (rebuilds, combat, loading screens) and the last 12 presses of your buttons. It flags when another addon has taken over an assigned button or a layer key, and whether a held layer's button is really still held. The last report is kept in MouseShift's saved variables file after `/reload`.
 
 ## 0.4.0
 

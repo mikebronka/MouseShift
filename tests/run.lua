@@ -248,7 +248,7 @@ local okStatus, statusErr = pcall(st.ns.ShowStatus)
 check(okStatus, "status window opens" .. (okStatus and "" or (": " .. tostring(statusErr))))
 local report = st.MouseShiftDB.lastReport or ""
 check(report:find("MouseShift status report", 1, true) ~= nil, "the report is saved for the SavedVariables file")
-check(report:find("SHIFT: BUTTON5 (BUTTON5), held: no, binding OK", 1, true) ~= nil, "the report checks the trigger binding")
+check(report:find("SHIFT: BUTTON5 (BUTTON5), held: no", 1, true) ~= nil and report:find("binding OK", 1, true) ~= nil, "the report checks the trigger binding")
 check(report:find("SHIFT pressed, layer SHIFT", 1, true) ~= nil, "trigger presses are in the event log")
 check(report:find("layers rebuilt: SHIFT", 1, true) ~= nil, "rebuilds are in the event log")
 check(report:find("skipped: A=ACTIONBUTTON31", 1, true) ~= nil, "skipped keys are in the report")
@@ -256,6 +256,16 @@ check(st.MouseShiftStatus and st.MouseShiftStatus:IsShown(), "the status window 
 st.overrides["BUTTON5"] = "CLICK BT4Button1:Keybind"
 st.ns.ShowStatus()
 check(st.MouseShiftDB.lastReport:find("PROBLEM, bound to: CLICK BT4Button1:Keybind", 1, true) ~= nil, "a button taken by another addon is reported")
+
+-- Many presses never push the other events out (0.4.1 review).
+for _ = 1, 30 do
+    st.MouseShiftDriver._scripts.OnClick(st.MouseShiftDriver, "SHIFT", true)
+    st.MouseShiftDriver._scripts.OnClick(st.MouseShiftDriver, "SHIFT", false)
+end
+st.ns.ShowStatus()
+check(st.MouseShiftDB.lastReport:find("layers rebuilt", 1, true) ~= nil, "rebuilds stay in the log after many presses")
+local _, presses = st.ns.GetLog()
+check(#presses == 12, "presses keep their own short list")
 
 print(("%d passed, %d failed"):format(passed, failures))
 if failures > 0 then

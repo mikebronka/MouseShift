@@ -90,6 +90,15 @@ function ns.UpdatePassThrough()
     end
 end
 
+-- The pass-through state, for /mouseshift status.
+function ns.GetPassThroughState()
+    local count = 0
+    for _ in pairs(changed) do
+        count = count + 1
+    end
+    return { buttons = AssignedMouseButtons(), frames = count, pending = updatePending }
+end
+
 -- Frames are often created in bursts (a raid forming, an addon loading), so
 -- updates are gathered and run once, a moment later.
 local function RequestUpdate()
